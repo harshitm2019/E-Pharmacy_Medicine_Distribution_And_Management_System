@@ -1,4 +1,4 @@
-package com.harshit.pharmacy.auth.dto;
+package com.harshit.pharmacy.auth.record;
 
 public record RegisterResponse(
 

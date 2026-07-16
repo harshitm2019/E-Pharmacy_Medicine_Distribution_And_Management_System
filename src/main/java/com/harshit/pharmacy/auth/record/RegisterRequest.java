@@ -1,7 +1,6 @@
-package com.harshit.pharmacy.auth.dto;
+package com.harshit.pharmacy.auth.record;
 
 import com.harshit.pharmacy.common.constants.ErrorMessages;
-import com.harshit.pharmacy.user.enums.UserRole;
 import jakarta.validation.constraints.*;
 
 public record RegisterRequest(

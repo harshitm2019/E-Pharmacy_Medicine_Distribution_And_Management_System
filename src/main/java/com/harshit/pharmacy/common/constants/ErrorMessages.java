@@ -23,6 +23,8 @@ public final class ErrorMessages {
     public static final String PIN_IS_REQUIRED = FieldNames.PIN + FIELD_IS_REQUIRED;
     public static final String ROLE_IS_REQUIRED = FieldNames.ROLE + FIELD_IS_REQUIRED;
     public static final String CATEGORY_DOES_NOT_EXIST = FieldNames.CATEGORY + FIELD_NOT_EXISTS;
+    public static final String MEDICINE_DOES_NOT_EXIST = FieldNames.MEDICINE + FIELD_NOT_EXISTS;
+    public static final String INVALID_EXPIRY_DATE = "Expiry date must be after manufacture date.";
 
 
 

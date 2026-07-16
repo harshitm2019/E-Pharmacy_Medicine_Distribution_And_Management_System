@@ -1,15 +1,11 @@
 package com.harshit.pharmacy.auth.validator;
 
 
-import com.harshit.pharmacy.auth.dto.RegisterRequest;
-import com.harshit.pharmacy.common.constants.AppConstants;
-import com.harshit.pharmacy.common.constants.ErrorMessages;
+import com.harshit.pharmacy.auth.record.RegisterRequest;
 import com.harshit.pharmacy.common.constants.FieldNames;
 import com.harshit.pharmacy.common.validator.DuplicateValidator;
-import com.harshit.pharmacy.exception.DuplicateResourceException;
 import com.harshit.pharmacy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component

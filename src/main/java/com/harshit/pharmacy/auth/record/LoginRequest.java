@@ -1,6 +1,5 @@
-package com.harshit.pharmacy.auth.dto;
+package com.harshit.pharmacy.auth.record;
 
-import com.harshit.pharmacy.common.constants.AppConstants;
 import com.harshit.pharmacy.common.constants.ErrorMessages;
 import jakarta.validation.constraints.NotBlank;
 

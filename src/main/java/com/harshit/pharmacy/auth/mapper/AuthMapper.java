@@ -1,13 +1,10 @@
 package com.harshit.pharmacy.auth.mapper;
 
-import com.harshit.pharmacy.auth.dto.LoginResponse;
-import com.harshit.pharmacy.auth.dto.RegisterRequest;
-import com.harshit.pharmacy.auth.dto.RegisterResponse;
-import com.harshit.pharmacy.common.constants.AppConstants;
+import com.harshit.pharmacy.auth.record.LoginResponse;
+import com.harshit.pharmacy.auth.record.RegisterRequest;
+import com.harshit.pharmacy.auth.record.RegisterResponse;
 import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;
-import com.harshit.pharmacy.user.enums.UserRole;
-import com.harshit.pharmacy.user.enums.UserStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.harshit.pharmacy.auth.dto;
+package com.harshit.pharmacy.auth.record;
 
 import com.harshit.pharmacy.user.enums.UserRole;
 
