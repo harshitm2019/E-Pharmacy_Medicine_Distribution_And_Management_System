@@ -9,7 +9,9 @@ import com.harshit.pharmacy.category.service.CategoryService;
 import com.harshit.pharmacy.common.constants.ErrorMessages;
 import com.harshit.pharmacy.common.constants.FieldNames;
 import com.harshit.pharmacy.common.validator.DuplicateValidator;
+import com.harshit.pharmacy.exception.BusinessException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
+import com.harshit.pharmacy.medicine.repository.MedicineRepository;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final DuplicateValidator duplicateValidator;
+    private final MedicineRepository medicineRepository;
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -74,23 +77,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Integer categoryId) {
 
-
         Category category = getCategory(categoryId);
 
-        /*
-         * TODO
-         * After implementing Medicine module,
-         * check whether any medicine belongs to this category.
-         *
-         * if (medicineRepository.existsByCategoryCategoryId(categoryId)) {
-         *      throw new BusinessException(
-         *              ErrorMessages.CATEGORY_IN_USE
-         *      );
-         * }
-         */
+         if (medicineRepository.existsByCategoryCategoryId(categoryId))
+              throw new BusinessException(ErrorMessages.CATEGORY_IN_USE);
 
         categoryRepository.delete(category);
-
 
     }
 

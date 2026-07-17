@@ -66,27 +66,18 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Swagger
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/v1/auth/**"
                         ).permitAll()
 
-                        // Authentication
-                        .requestMatchers("/api/v1/auth/**")
-                        .permitAll()
-
-                        // Category (Temporary while developing)
-                        .requestMatchers(
-                                "/api/v1/admin/categories/**"
-                        ).permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
                         .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/v1/categories/**"
+                                "/api/v1/medicines/**"
                         ).permitAll()
-
                         // Everything else
                         .anyRequest()
                         .authenticated()

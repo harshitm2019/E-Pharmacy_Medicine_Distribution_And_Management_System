@@ -12,6 +12,7 @@ import com.harshit.pharmacy.medicine.enums.MedicineStatus;
 import com.harshit.pharmacy.medicine.mapper.MedicineMapper;
 import com.harshit.pharmacy.medicine.record.MedicineRequest;
 import com.harshit.pharmacy.medicine.record.MedicineResponse;
+import com.harshit.pharmacy.medicine.record.MedicineStatusRequest;
 import com.harshit.pharmacy.medicine.repository.MedicineRepository;
 import com.harshit.pharmacy.medicine.service.MedicineService;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,21 +78,56 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
+
     @Override
     @Transactional(readOnly = true)
-    public Page<MedicineResponse> getAllMedicines(Pageable pageable) {
+    public Page<MedicineResponse> getAllActiveMedicines(Pageable pageable) {
 
         return medicineRepository.findByStatus(MedicineStatus.ACTIVE, pageable)
                 .map(MedicineMapper::toResponse);
 
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<MedicineResponse> getAllMedicines(Pageable pageable) {
 
-    private Category getCategory(Integer categoryId) {
+        return medicineRepository.findAll(pageable)
+                .map(MedicineMapper::toResponse);
 
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(ErrorMessages.CATEGORY_DOES_NOT_EXIST));
+    }
+
+
+    @Override
+    public List<MedicineResponse> updateStatus(MedicineStatusRequest request) {
+
+        List<Medicine> medicines = medicineRepository.findAllById(request.medicineIds());
+
+        if (medicines.size() != request.medicineIds().size())
+            throw new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST);
+
+        medicines.forEach(medicine -> medicine.setStatus(MedicineStatus.valueOf(request.status())));
+
+        return medicineRepository.saveAll(medicines)
+                .stream()
+                .map(MedicineMapper::toResponse)
+                .toList();
+
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MedicineResponse getActiveMedicineById(Integer medicineId) {
+
+        return MedicineMapper.toResponse(
+
+                medicineRepository.findByMedicineIdAndStatus(
+                        medicineId,
+                        MedicineStatus.ACTIVE
+                ).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST))
+
+        );
 
     }
 
@@ -99,6 +136,39 @@ public class MedicineServiceImpl implements MedicineService {
         return medicineRepository.findById(medicineId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST));
+
+    }
+
+
+    @Override
+    public Page<MedicineResponse> searchActiveMedicines(String keyword, Pageable pageable) {
+
+        return medicineRepository
+                .findByMedicineNameContainingIgnoreCaseAndStatus(
+                        keyword.trim(),
+                        MedicineStatus.ACTIVE,
+                        pageable
+                )
+                .map(MedicineMapper::toResponse);
+
+    }
+
+    @Override
+    public Page<MedicineResponse> searchMedicines(String keyword, Pageable pageable) {
+
+        return medicineRepository.findByMedicineNameContainingIgnoreCase(
+
+                 keyword.trim(),
+                 pageable)
+                .map(MedicineMapper::toResponse);
+
+    }
+
+    private Category getCategory(Integer categoryId) {
+
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(ErrorMessages.CATEGORY_DOES_NOT_EXIST));
 
     }
 

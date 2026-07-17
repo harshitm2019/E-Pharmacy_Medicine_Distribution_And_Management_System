@@ -30,6 +30,8 @@ public final class ErrorMessages {
 
     public static final String PHONE_NUMBER_MUST_BE_10_DIGITS = "Phone number must be 10 digits";
     public static final String INVALID_EMAIL = "Invalid email";
+    public static final String CATEGORY_IN_USE = "Category in use";
+
 
     // Authentication / authorization
     public static final String INVALID_USERNAME_OR_PASSWORD = "Invalid username or password";

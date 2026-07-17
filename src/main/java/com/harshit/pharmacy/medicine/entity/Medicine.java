@@ -7,7 +7,9 @@ import com.harshit.pharmacy.medicine.enums.PrescriptionNeed;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -58,11 +60,11 @@ public class Medicine {
     @Column(nullable = false, length = 300)
     private String description;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "prescription_need", nullable = false)
     private PrescriptionNeed prescriptionNeed;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private MedicineStatus status;
 
