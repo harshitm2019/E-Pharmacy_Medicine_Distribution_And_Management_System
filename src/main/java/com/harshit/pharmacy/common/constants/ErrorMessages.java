@@ -5,7 +5,6 @@ package com.harshit.pharmacy.common.constants;
 public final class ErrorMessages {
 
 
-
     private ErrorMessages() {}
 
     // Generic field validation
@@ -25,12 +24,21 @@ public final class ErrorMessages {
     public static final String CATEGORY_DOES_NOT_EXIST = FieldNames.CATEGORY + FIELD_NOT_EXISTS;
     public static final String MEDICINE_DOES_NOT_EXIST = FieldNames.MEDICINE + FIELD_NOT_EXISTS;
     public static final String INVALID_EXPIRY_DATE = "Expiry date must be after manufacture date.";
+    public static final String OLD_PASSWORD_IS_REQUIRED = "Old password is required.";
+    public static final String NEW_PASSWORD_IS_REQUIRED = "New password is required.";
+    public static final String CONFIRM_PASSWORD_IS_REQUIRED = "Confirm password is required.";
 
 
 
-    public static final String PHONE_NUMBER_MUST_BE_10_DIGITS = "Phone number must be 10 digits";
+    public static final String INVALID_PHONE_NUMBER = "Phone number must be Valid Indian Mobile Number.";
+    public static final String INVALID_PIN = "Pin code must be exactly 6 digits.";
     public static final String INVALID_EMAIL = "Invalid email";
     public static final String CATEGORY_IN_USE = "Category in use";
+    public static final String VALIDATION_FAILED = "Validation failed.";
+    public static final String USER_DOES_NOT_EXIST = FieldNames.USER + FIELD_NOT_EXISTS;
+    public static final String OLD_PASSWORD_INCORRECT = "Old password incorrect.";
+    public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";
+    public static final String NEW_PASSWORD_SAME_AS_OLD = "New password same as old.";
 
 
     // Authentication / authorization

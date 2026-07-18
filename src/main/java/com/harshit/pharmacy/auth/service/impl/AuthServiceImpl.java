@@ -6,7 +6,7 @@ import com.harshit.pharmacy.auth.record.RegisterRequest;
 import com.harshit.pharmacy.auth.record.RegisterResponse;
 import com.harshit.pharmacy.auth.mapper.AuthMapper;
 import com.harshit.pharmacy.auth.service.AuthService;
-import com.harshit.pharmacy.auth.validator.UserValidator;
+import com.harshit.pharmacy.common.validator.UserValidator;
 import com.harshit.pharmacy.security.jwt.JwtService;
 import com.harshit.pharmacy.security.jwt.JwtUser;
 import com.harshit.pharmacy.security.service.PasswordService;
@@ -35,7 +35,6 @@ public class AuthServiceImpl implements AuthService {
     private final UserValidator userValidator;
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
-    private final PasswordService passwordService;
     private final AuthMapper authMapper;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -44,12 +43,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RegisterResponse register(RegisterRequest request) {
 
-         userValidator.validateRegistration(request);
+         userValidator.validateRegistration(request.email(), request.phone());
 
-         User user = authMapper.toUser(request,passwordService.encode(request.password()));
-
-         user.setStatus(UserStatus.ACTIVE);
-         user.setRole(UserRole.CUSTOMER);
+         User user = authMapper.toUser(request);
 
          userRepository.save(user);
 

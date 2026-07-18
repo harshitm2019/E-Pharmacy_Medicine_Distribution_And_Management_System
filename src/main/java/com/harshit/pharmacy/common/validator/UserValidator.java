@@ -1,9 +1,8 @@
-package com.harshit.pharmacy.auth.validator;
+package com.harshit.pharmacy.common.validator;
 
 
 import com.harshit.pharmacy.auth.record.RegisterRequest;
 import com.harshit.pharmacy.common.constants.FieldNames;
-import com.harshit.pharmacy.common.validator.DuplicateValidator;
 import com.harshit.pharmacy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,16 +15,16 @@ public class UserValidator {
 
     private final DuplicateValidator duplicateValidator;
 
-    public void validateRegistration(RegisterRequest request) {
+    public void validateRegistration(String email, String phone) {
 
 
         duplicateValidator.validate(
-                userRepository.existsByEmail(request.email()),
+                userRepository.existsByEmail(email),
                 FieldNames.EMAIL
         );
 
         duplicateValidator.validate(
-                userRepository.existsByPhone(request.phone()),
+                userRepository.existsByPhone(phone),
                 FieldNames.PHONE_NUMBER
         );
     }

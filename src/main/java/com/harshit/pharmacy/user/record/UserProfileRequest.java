@@ -1,26 +1,21 @@
-package com.harshit.pharmacy.auth.record;
+package com.harshit.pharmacy.user.record;
 
 import com.harshit.pharmacy.common.constants.AppConstants;
 import com.harshit.pharmacy.common.constants.ErrorMessages;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-public record RegisterRequest(
+public record UserProfileRequest(
+
 
         @NotBlank(message = ErrorMessages.USERNAME_IS_REQUIRED)
-        @Size(min = 3, max = 100)
+        @Size(min = 3,max = 100)
         String username,
-
-        @Email(message = ErrorMessages.INVALID_EMAIL)
-        @NotBlank(message = ErrorMessages.EMAIL_IS_REQUIRED)
-        String email,
 
         @NotBlank(message = ErrorMessages.PHONE_NUMBER_IS_REQUIRED)
         @Pattern(regexp = AppConstants.PHONE_NUMBER_PATTERN, message = ErrorMessages.INVALID_PHONE_NUMBER)
-        String phone,
-
-        @NotBlank(message = ErrorMessages.PASSWORD_IS_REQUIRED)
-        @Size(min = 8, max = 20)
-        String password,
+        String phoneNumber,
 
         @NotBlank(message = ErrorMessages.ADDRESS_IS_REQUIRED)
         String address,
@@ -32,8 +27,9 @@ public record RegisterRequest(
         String state,
 
         @NotBlank(message = ErrorMessages.PIN_IS_REQUIRED)
-        @Pattern(regexp = AppConstants.PIN_PATTERN, message = ErrorMessages.INVALID_PIN)
+        @Pattern(regexp = AppConstants.PIN_PATTERN,message =  ErrorMessages.INVALID_PIN)
         String pin
+
 
 ) {
 }

@@ -16,4 +16,5 @@ public final class FieldNames {
     public static final String CATEGORY = "Category";
     public static final String BATCH_NUMBER = "Batch number";
     public static final String MEDICINE = "Medicine";
+    public static final String USER = "User";
 }

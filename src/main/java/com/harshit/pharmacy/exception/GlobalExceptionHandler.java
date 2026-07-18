@@ -1,6 +1,6 @@
 package com.harshit.pharmacy.exception;
 
-import com.harshit.pharmacy.common.constants.AppConstants;
+import com.harshit.pharmacy.common.constants.ErrorMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
         }
 
         ApiResponse<Map<String, String>> response =
-                new ApiResponse<>(false, AppConstants.VALIDATION_FAILED, errors);
+                new ApiResponse<>(false, ErrorMessages.VALIDATION_FAILED, errors);
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -69,6 +69,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Object>> handleBusinessException(Exception ex){
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ApiResponse<Object>> handleInvalidRequestException(Exception ex){
 
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
 
