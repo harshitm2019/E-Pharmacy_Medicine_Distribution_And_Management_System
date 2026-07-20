@@ -3,7 +3,7 @@ package com.harshit.pharmacy.medicine.controller;
 
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
-import com.harshit.pharmacy.common.swagger.medicine.*;
+import com.harshit.pharmacy.common.swagger.annotations.medicine.*;
 import com.harshit.pharmacy.medicine.record.MedicineRequest;
 import com.harshit.pharmacy.medicine.record.MedicineResponse;
 import com.harshit.pharmacy.medicine.record.MedicineStatusRequest;

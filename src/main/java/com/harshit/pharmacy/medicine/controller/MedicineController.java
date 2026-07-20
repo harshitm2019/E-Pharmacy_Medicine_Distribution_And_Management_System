@@ -3,10 +3,9 @@ package com.harshit.pharmacy.medicine.controller;
 
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
-import com.harshit.pharmacy.common.swagger.medicine.GetActiveMedicineById;
-import com.harshit.pharmacy.common.swagger.medicine.GetAllActiveMedicines;
-import com.harshit.pharmacy.common.swagger.medicine.GetMedicineById;
-import com.harshit.pharmacy.common.swagger.medicine.SearchActiveMedicines;
+import com.harshit.pharmacy.common.swagger.annotations.medicine.GetAllActiveMedicines;
+import com.harshit.pharmacy.common.swagger.annotations.medicine.GetMedicineById;
+import com.harshit.pharmacy.common.swagger.annotations.medicine.SearchActiveMedicines;
 import com.harshit.pharmacy.medicine.record.MedicineResponse;
 import com.harshit.pharmacy.medicine.service.MedicineService;
 import io.swagger.v3.oas.annotations.tags.Tag;

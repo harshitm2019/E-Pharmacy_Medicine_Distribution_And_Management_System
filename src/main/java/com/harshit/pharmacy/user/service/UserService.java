@@ -1,6 +1,5 @@
 package com.harshit.pharmacy.user.service;
 
-import com.harshit.pharmacy.common.response.ApiResponse;
 import com.harshit.pharmacy.user.record.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

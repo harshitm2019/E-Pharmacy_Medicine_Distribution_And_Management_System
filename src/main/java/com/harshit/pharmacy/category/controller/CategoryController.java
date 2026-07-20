@@ -6,8 +6,8 @@ import com.harshit.pharmacy.category.record.CategoryResponse;
 import com.harshit.pharmacy.category.service.CategoryService;
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
-import com.harshit.pharmacy.common.swagger.category.*;
-import io.swagger.v3.oas.annotations.Operation;
+import com.harshit.pharmacy.common.swagger.annotations.category.*;
+import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(
-        name = "Category Management",
+        name = SwaggerConstants.CATEGORY_TAG,
         description = "APIs for managing medicine categories."
 )
 @RestController
@@ -72,7 +72,7 @@ public class CategoryController {
 
     }
 
-    @GelAllCategoriesApi
+    @GetAllCategoriesApi
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories() {
 

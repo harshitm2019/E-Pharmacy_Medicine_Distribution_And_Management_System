@@ -1,8 +1,8 @@
 package com.harshit.pharmacy.security.jwt;
 
-import com.harshit.pharmacy.common.constants.AppConstants;
 import com.harshit.pharmacy.common.constants.FieldNames;
 import com.harshit.pharmacy.security.config.JwtConfigProperties;
+import com.harshit.pharmacy.security.user.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -30,11 +30,6 @@ public class JwtServiceImpl implements JwtService {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put(
-                AppConstants.USER_ID,
-                jwtUser.userId()
-        );
-
-        claims.put(
                 FieldNames.ROLE,
                 jwtUser.role().name()
         );
@@ -43,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(jwtUser.email())
+                .subject(String.valueOf(jwtUser.userId()))
                 .issuedAt(now)
                 .expiration(new Date(
                         now.getTime() + jwtProperties.expiration()))
@@ -79,9 +74,12 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
 
-        String username = extractUsername(token);
+        Integer tokenUserId = extractUserId(token);
 
-        return username.equals(userDetails.getUsername())
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails) userDetails;
+
+        return tokenUserId.equals(customUserDetails.getUser().getUserId())
                 && !isTokenExpired(token);
 
     }
@@ -89,8 +87,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Integer extractUserId(String token) {
 
-        return extractClaim(token, claims ->
-                claims.get(AppConstants.USER_ID, Integer.class));
+        return Integer.valueOf(extractUsername(token));
 
     }
 
@@ -120,4 +117,7 @@ public class JwtServiceImpl implements JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
 
     }
+
+
+
 }

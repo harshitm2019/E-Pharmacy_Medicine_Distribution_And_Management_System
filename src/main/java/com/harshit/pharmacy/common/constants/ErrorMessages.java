@@ -5,6 +5,7 @@ package com.harshit.pharmacy.common.constants;
 public final class ErrorMessages {
 
 
+
     private ErrorMessages() {}
 
     // Generic field validation
@@ -28,6 +29,14 @@ public final class ErrorMessages {
     public static final String NEW_PASSWORD_IS_REQUIRED = "New password is required.";
     public static final String CONFIRM_PASSWORD_IS_REQUIRED = "Confirm password is required.";
 
+    public static final String PRESCRIPTION_FILE_REQUIRED = "Prescription file is required.";
+    public static final String PRESCRIPTION_FILE_SIZE_EXCEEDED = "Prescription file size must not exceed" ;
+    public static final String INVALID_PRESCRIPTION_FILE_TYPE = "Only PDF and JPG files are allowed.";
+
+
+    public static final String BATCH_NUMBER_ALREADY_EXISTS = "Batch number already exists.";
+    public static final String CATEGORY_ALREADY_EXISTS = "Category already exists.";
+
 
 
     public static final String INVALID_PHONE_NUMBER = "Phone number must be Valid Indian Mobile Number.";
@@ -35,6 +44,7 @@ public final class ErrorMessages {
     public static final String INVALID_EMAIL = "Invalid email";
     public static final String CATEGORY_IN_USE = "Category in use";
     public static final String VALIDATION_FAILED = "Validation failed.";
+    public static final String INVALID_PASSWORD = "Invalid password.";
     public static final String USER_DOES_NOT_EXIST = FieldNames.USER + FIELD_NOT_EXISTS;
     public static final String OLD_PASSWORD_INCORRECT = "Old password incorrect.";
     public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";

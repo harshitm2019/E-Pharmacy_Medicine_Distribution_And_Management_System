@@ -1,5 +1,7 @@
-package com.harshit.pharmacy.common.swagger.medicine;
+package com.harshit.pharmacy.common.swagger.annotations.medicine;
 
+import com.harshit.pharmacy.common.constants.SuccessMessages;
+import com.harshit.pharmacy.common.swagger.constants.SwaggerResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,12 +18,9 @@ import java.lang.annotation.Target;
         description = "Returns a paginated list of all medicines including active and inactive medicines."
 )
 @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Medicines fetched successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Access denied")
+        @ApiResponse(responseCode = SwaggerResponses.OK, description = SuccessMessages.ALL_MEDICINES_FETCHED),
+        @ApiResponse(responseCode = SwaggerResponses.UNAUTHORIZED, description = SwaggerResponses.UNAUTHORIZED_DESC),
+        @ApiResponse(responseCode = SwaggerResponses.FORBIDDEN, description = SwaggerResponses.ACCESS_DENIED)
 })
 public @interface GetAllMedicines {
-
-
-
 }

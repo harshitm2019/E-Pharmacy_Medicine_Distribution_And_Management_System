@@ -1,6 +1,8 @@
 package com.harshit.pharmacy.user.service.impl;
 
 import com.harshit.pharmacy.common.constants.ErrorMessages;
+import com.harshit.pharmacy.common.constants.FieldNames;
+import com.harshit.pharmacy.common.validator.DuplicateValidator;
 import com.harshit.pharmacy.common.validator.UserValidator;
 import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.InvalidRequestException;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final SecurityUtils securityUtils;
     private final PasswordService  passwordService;
+    private final DuplicateValidator duplicateValidator;
 
 
     @Override
@@ -111,8 +114,20 @@ public class UserServiceImpl implements UserService {
 
         User user = securityUtils.getCurrentUser();
 
+        if (!passwordService.matches(request.password(), user.getPassword())) {
+            throw new InvalidRequestException(ErrorMessages.INVALID_PASSWORD);
+        }
 
+        duplicateValidator.validate(
 
+               userRepository.existsByEmailAndUserIdNot(request.newEmail(),user.getUserId()),
+                FieldNames.EMAIL
+
+        );
+
+        user.setEmail(request.newEmail());
+
+        userRepository.save(user);
 
     }
 
@@ -132,6 +147,9 @@ public class UserServiceImpl implements UserService {
         if (passwordService.matches(request.newPassword(), user.getPassword())) {
             throw new InvalidRequestException(ErrorMessages.NEW_PASSWORD_SAME_AS_OLD);
         }
+
+        user.setPassword(passwordService.encode(request.newPassword()));
+        userRepository.save(user);
 
     }
 

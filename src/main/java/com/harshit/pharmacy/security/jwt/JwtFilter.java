@@ -57,14 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(
                     SecurityConstants.BEARER_PREFIX.length());
 
-            String username = jwtService.extractUsername(token);
+            Integer userId = jwtService.extractUserId(token);
 
-            if (username != null
-                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                CustomUserDetails userDetails =
-                        (CustomUserDetails) customUserDetailsService
-                                .loadUserByUsername(username);
+                CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUserId(userId);
 
                 if (!userDetails.isEnabled()) {
                     throw new DisabledException(

@@ -1,5 +1,8 @@
-package com.harshit.pharmacy.common.swagger.medicine;
+package com.harshit.pharmacy.common.swagger.annotations.medicine;
 
+import com.harshit.pharmacy.common.constants.ErrorMessages;
+import com.harshit.pharmacy.common.constants.SuccessMessages;
+import com.harshit.pharmacy.common.swagger.constants.SwaggerResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,8 +19,8 @@ import java.lang.annotation.Target;
         description = "Returns an active medicine using its ID."
 )
 @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Medicine fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Medicine not found")
+        @ApiResponse(responseCode = SwaggerResponses.OK, description = SuccessMessages.MEDICINE_FETCHED),
+        @ApiResponse(responseCode = SwaggerResponses.NOT_FOUND, description = ErrorMessages.MEDICINE_DOES_NOT_EXIST)
 })
 public @interface GetActiveMedicineById {
 }

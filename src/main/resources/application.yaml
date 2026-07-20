@@ -29,3 +29,10 @@ app:
     email: ${ADMIN_EMAIL}
     phone: ${ADMIN_PHONE}
     password: ${ADMIN_PASSWORD}
+
+file:
+  prescription:
+    max-size: 5MB
+    allowed-types:
+      - application/pdf
+      - image/jpeg

@@ -1,6 +1,8 @@
-package com.harshit.pharmacy.common.swagger.category;
+package com.harshit.pharmacy.common.swagger.annotations.category;
 
 
+import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
+import com.harshit.pharmacy.common.swagger.constants.SwaggerResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,9 +20,9 @@ import java.lang.annotation.Target;
         description = "Returns all available medicine categories."
 )
 @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Categories fetched successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized")
+        @ApiResponse(responseCode = SwaggerResponses.OK, description = "Categories fetched successfully"),
+        @ApiResponse(responseCode = SwaggerResponses.UNAUTHORIZED, description = SwaggerResponses.UNAUTHORIZED_DESC)
 })
-@SecurityRequirement(name = "Bearer Authentication")
-public @interface GelAllCategoriesApi {
+@SecurityRequirement(name = SwaggerConstants.BEARER_AUTH)
+public @interface GetAllCategoriesApi {
 }

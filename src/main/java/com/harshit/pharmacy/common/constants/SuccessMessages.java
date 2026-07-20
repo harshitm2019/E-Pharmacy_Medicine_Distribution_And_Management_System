@@ -18,5 +18,14 @@ public final class SuccessMessages {
     public static final String MEDICINE_STATUS_UPDATED = "Medicine status updated successfully";
     public static final String MEDICINE_FETCHED = "Medicine fetched successfully";
     public static final String SUCCESS = "Success";
+    public static final String USER_CREATED = "User created successfully";
+    public static final String USER_FETCHED_SUCCESSFULLY = "User fetched successfully";
+    public static final String USER_STATUS_UPDATED = "User status updated successfully.";
+    public static final String USER_UPDATED_SUCCESSFULLY = "User updated successfully";
+    public static final String PASSWORD_CHANGED = "Password changed successfully";
+    public static final String EMAIL_CHANGED = "Email changed successfully";
+    public static final String USER_PROFILE_UPDATED_SUCCESSFULLY = "User profile updated successfully";
+    public static final String USER_PROFILE_FETCHED_SUCCESSFULLY = "Profile fetched successfully";
+
 
 }
