@@ -13,7 +13,11 @@ public record PrescriptionResponse(
 
         PrescriptionStatus status,
 
+        String prescriptionUrl,
+
         LocalDateTime uploadedDate
+
+
 
 ) {
 }

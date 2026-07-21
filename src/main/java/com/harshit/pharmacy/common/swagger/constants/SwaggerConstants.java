@@ -13,6 +13,7 @@ public class SwaggerConstants {
     public static final String USER_TAG = "User Management";
     public static final String AUTH_TAG = "Authentication";
     public static final String ADMIN_USER_TAG = "Administrative User Management";
+    public static final String Prescription_TAG = "Prescription Management";
 
     public static final String USER_TAG_DESCRIPTION =
             "APIs for authenticated users to manage their profile, email and password.";

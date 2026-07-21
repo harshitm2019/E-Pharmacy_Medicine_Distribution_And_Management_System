@@ -6,6 +6,7 @@ public final class ErrorMessages {
 
 
 
+
     private ErrorMessages() {}
 
     // Generic field validation
@@ -32,6 +33,13 @@ public final class ErrorMessages {
     public static final String PRESCRIPTION_FILE_REQUIRED = "Prescription file is required.";
     public static final String PRESCRIPTION_FILE_SIZE_EXCEEDED = "Prescription file size must not exceed" ;
     public static final String INVALID_PRESCRIPTION_FILE_TYPE = "Only PDF and JPG files are allowed.";
+
+    public static final String UNABLE_TO_UPLOAD_PRESCRIPTION = "Unable to upload prescription.";
+    public static final String UNABLE_TO_DELETE_PRESCRIPTION = "Unable to delete prescription.";
+    public static final String CANNOT_MODIFY_REVIEWED_PRESCRIPTION = "Cannot modify prescription.";
+    public static final String PRESCRIPTION_NOT_FOUND = "Prescription not found.";
+    public static final String ACCESS_DENIED = "You do not have permission to access this resource.";
+    public static final String UNABLE_TO_REPLACE_PRESCRIPTION = "Unable to replace prescription.";
 
 
     public static final String BATCH_NUMBER_ALREADY_EXISTS = "Batch number already exists.";

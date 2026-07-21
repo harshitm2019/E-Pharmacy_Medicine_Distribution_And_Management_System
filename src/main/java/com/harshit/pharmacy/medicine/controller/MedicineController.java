@@ -3,6 +3,7 @@ package com.harshit.pharmacy.medicine.controller;
 
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
+import com.harshit.pharmacy.common.swagger.annotations.medicine.GetActiveMedicineById;
 import com.harshit.pharmacy.common.swagger.annotations.medicine.GetAllActiveMedicines;
 import com.harshit.pharmacy.common.swagger.annotations.medicine.GetMedicineById;
 import com.harshit.pharmacy.common.swagger.annotations.medicine.SearchActiveMedicines;
@@ -44,7 +45,7 @@ public class MedicineController {
 
     }
 
-    @GetMedicineById
+    @GetActiveMedicineById
     @GetMapping("/{medicineId}")
     public ResponseEntity<ApiResponse<MedicineResponse>> getMedicineById(@PathVariable Integer medicineId) {
 

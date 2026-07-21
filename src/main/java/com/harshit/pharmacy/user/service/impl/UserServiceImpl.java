@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService {
 
         UserProfile profile = getUserProfile(user);
 
-
         userMapper.updateUserProfile(request, user, profile);
 
         userRepository.save(user);

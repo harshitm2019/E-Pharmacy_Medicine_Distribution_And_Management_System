@@ -109,7 +109,7 @@ public class AdminMedicineController {
     }
 
     @UpdateMedicineStatus
-    @PatchMapping("/updateStatus")
+    @PatchMapping("/status")
     public ResponseEntity<ApiResponse<List<MedicineResponse>>> updateStatus(@Valid @RequestBody MedicineStatusRequest request) {
 
 

@@ -26,6 +26,9 @@ public final class SuccessMessages {
     public static final String EMAIL_CHANGED = "Email changed successfully";
     public static final String USER_PROFILE_UPDATED_SUCCESSFULLY = "User profile updated successfully";
     public static final String USER_PROFILE_FETCHED_SUCCESSFULLY = "Profile fetched successfully";
+    public static final String PRESCRIPTION_UPLOADED = "Prescription uploaded successfully";
+    public static final String PRESCRIPTION_REPLACED = "Prescription replaced successfully";
+    public static final String PRESCRIPTION_FETCHED_SUCCESSFULLY = "Prescription fetched successfully";
 
 
 }

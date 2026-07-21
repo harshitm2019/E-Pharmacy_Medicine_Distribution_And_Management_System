@@ -12,4 +12,8 @@ public interface PrescriptionService {
 
     Page<PrescriptionResponse> getMyPrescriptions(Pageable pageable);
 
+    PrescriptionResponse replacePrescription(Integer prescriptionId, MultipartFile file);
+
+    PrescriptionResponse getPrescriptionById(Integer prescriptionId);
+
 }

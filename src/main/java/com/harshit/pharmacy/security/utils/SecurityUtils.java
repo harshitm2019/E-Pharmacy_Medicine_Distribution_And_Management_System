@@ -19,15 +19,7 @@ public class SecurityUtils {
             throw new UnauthorizedException(ErrorMessages.AUTHENTICATION_REQUIRED);
         }
 
-        System.out.println(authentication);
-        System.out.println(authentication.getPrincipal());
-        System.out.println(authentication.getPrincipal().getClass());
-
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        System.out.println(userDetails.getUser());
-        System.out.println(userDetails.getUser().getUserId());
-        System.out.println(userDetails.getUser().getEmail());
 
         return userDetails.getUser();
     }

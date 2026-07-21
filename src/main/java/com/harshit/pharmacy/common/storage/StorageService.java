@@ -6,7 +6,7 @@ public interface StorageService {
 
     String uploadPrescription(MultipartFile file);
 
-    byte[] downloadPrescription(String filePath);
+    String getFileUrl(String filePath);
 
     void deletePrescription(String filePath);
 

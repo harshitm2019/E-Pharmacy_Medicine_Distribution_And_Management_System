@@ -6,6 +6,7 @@ import com.harshit.pharmacy.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -65,6 +66,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Public APIs
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -76,6 +78,16 @@ public class SecurityConfig {
                         // Admin APIs
                         .requestMatchers("/api/v1/admin/**")
                         .hasRole("ADMIN")
+
+                        // Prescription APIs
+                        .requestMatchers(HttpMethod.POST, "/api/v1/prescriptions/**")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/prescriptions/**")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/prescriptions/**")
+                        .hasAnyRole("ADMIN", "CUSTOMER")
 
                         // Authenticated User APIs
                         .requestMatchers("/api/v1/users/**")
