@@ -1,8 +1,8 @@
 package com.harshit.pharmacy.auth.mapper;
 
-import com.harshit.pharmacy.auth.record.LoginResponse;
-import com.harshit.pharmacy.auth.record.RegisterRequest;
-import com.harshit.pharmacy.auth.record.RegisterResponse;
+import com.harshit.pharmacy.auth.dto.LoginResponse;
+import com.harshit.pharmacy.auth.dto.RegisterRequest;
+import com.harshit.pharmacy.auth.dto.RegisterResponse;
 import com.harshit.pharmacy.security.service.PasswordService;
 import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;

@@ -8,7 +8,7 @@ import com.harshit.pharmacy.common.swagger.annotations.user.ChangePasswordApi;
 import com.harshit.pharmacy.common.swagger.annotations.user.GetMyProfileApi;
 import com.harshit.pharmacy.common.swagger.annotations.user.UpdateProfileApi;
 import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
-import com.harshit.pharmacy.user.record.*;
+import com.harshit.pharmacy.user.dto.*;
 import com.harshit.pharmacy.user.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

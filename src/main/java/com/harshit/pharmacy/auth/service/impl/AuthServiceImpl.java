@@ -1,20 +1,17 @@
 package com.harshit.pharmacy.auth.service.impl;
 
-import com.harshit.pharmacy.auth.record.LoginRequest;
-import com.harshit.pharmacy.auth.record.LoginResponse;
-import com.harshit.pharmacy.auth.record.RegisterRequest;
-import com.harshit.pharmacy.auth.record.RegisterResponse;
+import com.harshit.pharmacy.auth.dto.LoginRequest;
+import com.harshit.pharmacy.auth.dto.LoginResponse;
+import com.harshit.pharmacy.auth.dto.RegisterRequest;
+import com.harshit.pharmacy.auth.dto.RegisterResponse;
 import com.harshit.pharmacy.auth.mapper.AuthMapper;
 import com.harshit.pharmacy.auth.service.AuthService;
 import com.harshit.pharmacy.common.validator.UserValidator;
 import com.harshit.pharmacy.security.jwt.JwtService;
 import com.harshit.pharmacy.security.jwt.JwtUser;
-import com.harshit.pharmacy.security.service.PasswordService;
 import com.harshit.pharmacy.security.user.CustomUserDetails;
 import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;
-import com.harshit.pharmacy.user.enums.UserRole;
-import com.harshit.pharmacy.user.enums.UserStatus;
 import com.harshit.pharmacy.user.repository.UserProfileRepository;
 import com.harshit.pharmacy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

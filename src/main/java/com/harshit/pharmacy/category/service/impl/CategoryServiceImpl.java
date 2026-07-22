@@ -2,8 +2,8 @@ package com.harshit.pharmacy.category.service.impl;
 
 import com.harshit.pharmacy.category.entity.Category;
 import com.harshit.pharmacy.category.mapper.CategoryMapper;
-import com.harshit.pharmacy.category.record.CategoryRequest;
-import com.harshit.pharmacy.category.record.CategoryResponse;
+import com.harshit.pharmacy.category.dto.CategoryRequest;
+import com.harshit.pharmacy.category.dto.CategoryResponse;
 import com.harshit.pharmacy.category.repository.CategoryRepository;
 import com.harshit.pharmacy.category.service.CategoryService;
 import com.harshit.pharmacy.common.constants.ErrorMessages;

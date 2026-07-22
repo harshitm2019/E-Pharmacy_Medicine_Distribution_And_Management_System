@@ -4,8 +4,8 @@ import com.harshit.pharmacy.category.entity.Category;
 import com.harshit.pharmacy.medicine.entity.Medicine;
 import com.harshit.pharmacy.medicine.enums.MedicineStatus;
 import com.harshit.pharmacy.medicine.enums.PrescriptionNeed;
-import com.harshit.pharmacy.medicine.record.MedicineRequest;
-import com.harshit.pharmacy.medicine.record.MedicineResponse;
+import com.harshit.pharmacy.medicine.dto.MedicineRequest;
+import com.harshit.pharmacy.medicine.dto.MedicineResponse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -1,9 +1,9 @@
 package com.harshit.pharmacy.auth.controller;
 
-import com.harshit.pharmacy.auth.record.LoginRequest;
-import com.harshit.pharmacy.auth.record.LoginResponse;
-import com.harshit.pharmacy.auth.record.RegisterRequest;
-import com.harshit.pharmacy.auth.record.RegisterResponse;
+import com.harshit.pharmacy.auth.dto.LoginRequest;
+import com.harshit.pharmacy.auth.dto.LoginResponse;
+import com.harshit.pharmacy.auth.dto.RegisterRequest;
+import com.harshit.pharmacy.auth.dto.RegisterResponse;
 import com.harshit.pharmacy.auth.service.AuthService;
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;

@@ -1,7 +1,6 @@
 package com.harshit.pharmacy.common.validator;
 
 
-import com.harshit.pharmacy.auth.record.RegisterRequest;
 import com.harshit.pharmacy.common.constants.FieldNames;
 import com.harshit.pharmacy.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

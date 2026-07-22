@@ -6,7 +6,7 @@ import com.harshit.pharmacy.common.swagger.annotations.prescription.GetMyPrescri
 import com.harshit.pharmacy.common.swagger.annotations.prescription.GetPrescriptionByIdApi;
 import com.harshit.pharmacy.common.swagger.annotations.prescription.ReplacePrescriptionApi;
 import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
-import com.harshit.pharmacy.prescription.record.PrescriptionResponse;
+import com.harshit.pharmacy.prescription.dto.PrescriptionResponse;
 import com.harshit.pharmacy.prescription.service.PrescriptionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

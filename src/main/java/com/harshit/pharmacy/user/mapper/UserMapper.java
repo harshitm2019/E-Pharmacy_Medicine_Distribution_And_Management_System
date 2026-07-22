@@ -1,14 +1,14 @@
 package com.harshit.pharmacy.user.mapper;
 
 import com.harshit.pharmacy.security.service.PasswordService;
-import com.harshit.pharmacy.user.record.*;
-import com.harshit.pharmacy.user.record.UserProfileResponse;
+import com.harshit.pharmacy.user.dto.*;
+import com.harshit.pharmacy.user.dto.UserProfileResponse;
 import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;
 import com.harshit.pharmacy.user.enums.UserRole;
 import com.harshit.pharmacy.user.enums.UserStatus;
-import com.harshit.pharmacy.user.record.AdminUserResponse;
-import com.harshit.pharmacy.user.record.CreateUserRequest;
+import com.harshit.pharmacy.user.dto.AdminUserResponse;
+import com.harshit.pharmacy.user.dto.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -2,7 +2,6 @@ package com.harshit.pharmacy.medicine.repository;
 
 import com.harshit.pharmacy.medicine.entity.Medicine;
 import com.harshit.pharmacy.medicine.enums.MedicineStatus;
-import com.harshit.pharmacy.medicine.record.MedicineResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -13,7 +13,7 @@ import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;
 import com.harshit.pharmacy.user.enums.UserStatus;
 import com.harshit.pharmacy.user.mapper.UserMapper;
-import com.harshit.pharmacy.user.record.*;
+import com.harshit.pharmacy.user.dto.*;
 import com.harshit.pharmacy.user.repository.UserProfileRepository;
 import com.harshit.pharmacy.user.repository.UserRepository;
 import com.harshit.pharmacy.user.service.UserService;

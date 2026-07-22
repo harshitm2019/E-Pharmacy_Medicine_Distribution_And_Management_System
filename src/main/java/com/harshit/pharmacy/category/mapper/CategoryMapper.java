@@ -1,8 +1,8 @@
 package com.harshit.pharmacy.category.mapper;
 
 import com.harshit.pharmacy.category.entity.Category;
-import com.harshit.pharmacy.category.record.CategoryRequest;
-import com.harshit.pharmacy.category.record.CategoryResponse;
+import com.harshit.pharmacy.category.dto.CategoryRequest;
+import com.harshit.pharmacy.category.dto.CategoryResponse;
 
 public final class CategoryMapper {
 

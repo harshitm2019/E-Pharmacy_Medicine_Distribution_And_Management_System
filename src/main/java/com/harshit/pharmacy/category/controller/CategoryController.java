@@ -1,8 +1,8 @@
 package com.harshit.pharmacy.category.controller;
 
 
-import com.harshit.pharmacy.category.record.CategoryRequest;
-import com.harshit.pharmacy.category.record.CategoryResponse;
+import com.harshit.pharmacy.category.dto.CategoryRequest;
+import com.harshit.pharmacy.category.dto.CategoryResponse;
 import com.harshit.pharmacy.category.service.CategoryService;
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
