@@ -5,10 +5,13 @@ import com.harshit.pharmacy.common.response.ApiResponse;
 import com.harshit.pharmacy.common.swagger.annotations.prescription.GetMyPrescriptionsApi;
 import com.harshit.pharmacy.common.swagger.annotations.prescription.GetPrescriptionByIdApi;
 import com.harshit.pharmacy.common.swagger.annotations.prescription.ReplacePrescriptionApi;
+import com.harshit.pharmacy.common.swagger.annotations.prescription.UploadPrescriptionApi;
 import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
 import com.harshit.pharmacy.prescription.dto.PrescriptionResponse;
+import com.harshit.pharmacy.prescription.dto.UploadPrescriptionRequest;
 import com.harshit.pharmacy.prescription.service.PrescriptionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Tag(name = SwaggerConstants.Prescription_TAG, description = "APIs for managing Prescription")
@@ -29,6 +33,18 @@ public class PrescriptionController {
     private final PrescriptionService prescriptionService;
 
 
+    @UploadPrescriptionApi
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<PrescriptionResponse>> uploadPrescription(
+            @RequestPart("prescription") MultipartFile prescription,
+            @Valid @RequestPart("request") UploadPrescriptionRequest request) {
+
+        PrescriptionResponse response = prescriptionService.uploadPrescription(prescription, request);
+
+        return ResponseEntity.status(CREATED).body(
+                ApiResponse.success(SuccessMessages.PRESCRIPTION_UPLOADED, response)
+        );
+    }
     @ReplacePrescriptionApi
     @PutMapping(value = "/{prescriptionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PrescriptionResponse>> replacePrescription(

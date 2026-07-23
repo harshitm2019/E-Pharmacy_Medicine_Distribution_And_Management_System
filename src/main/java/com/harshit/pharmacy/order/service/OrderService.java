@@ -9,8 +9,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    CheckoutResponse checkout(CheckoutRequest request,
-                              MultipartFile prescriptionFile);
+    CheckoutResponse checkout(CheckoutRequest request);
 
     List<OrderResponse> getMyOrders();
 

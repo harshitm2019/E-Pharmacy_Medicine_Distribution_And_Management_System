@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface PrescriptionService {
 
-    PrescriptionResponse uploadPrescription(MultipartFile prescription, UploadPrescriptionRequest request);
+    PrescriptionResponse uploadPrescription(MultipartFile prescription,UploadPrescriptionRequest request);
 
     Page<PrescriptionResponse> getMyPrescriptions(Pageable pageable);
 

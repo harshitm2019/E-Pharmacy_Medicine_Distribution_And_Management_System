@@ -37,7 +37,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
 
     @Override
-    public PrescriptionResponse uploadPrescription(MultipartFile prescriptionFile, UploadPrescriptionRequest request) {
+    public PrescriptionResponse uploadPrescription(MultipartFile prescriptionFile,UploadPrescriptionRequest request) {
 
 
         fileValidator.validatePrescription(prescriptionFile);

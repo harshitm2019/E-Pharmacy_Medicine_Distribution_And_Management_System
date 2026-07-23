@@ -1,6 +1,5 @@
 package com.harshit.pharmacy.order.dto;
 
-import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,8 +20,9 @@ public record CheckoutRequest(
         String paymentMethod,
 
         @NotEmpty(message = "Cart cannot be empty.")
-        List<@Valid CartItemRequest> items
+        List<@Valid CartItemRequest> items,
 
+        Integer prescriptionId
 
 ) {
 }

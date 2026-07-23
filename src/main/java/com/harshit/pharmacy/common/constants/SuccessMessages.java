@@ -30,5 +30,10 @@ public final class SuccessMessages {
     public static final String PRESCRIPTION_REPLACED = "Prescription replaced successfully";
     public static final String PRESCRIPTION_FETCHED_SUCCESSFULLY = "Prescription fetched successfully";
 
+    public static final String ORDER_PLACED_SUCCESSFULLY = "Order placed successfully";
+    public static final String ORDERS_FETCHED_SUCCESSFULLY = "Orders fetched successfully";
+    public static final String ORDER_FETCHED_SUCCESSFULLY = "Order fetched successfully";
+    public static final String ORDER_CANCELLED_SUCCESSFULLY = "Order cancelled successfully";
+
 
 }
