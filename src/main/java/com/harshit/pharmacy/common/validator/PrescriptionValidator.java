@@ -4,6 +4,7 @@ import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
 import com.harshit.pharmacy.medicine.entity.Medicine;
 import com.harshit.pharmacy.medicine.enums.PrescriptionNeed;
+import com.harshit.pharmacy.order.dto.CheckoutMedicine;
 import com.harshit.pharmacy.order.dto.CheckoutRequest;
 import com.harshit.pharmacy.prescription.entity.Prescription;
 import com.harshit.pharmacy.prescription.repository.PrescriptionRepository;
@@ -19,13 +20,12 @@ public class PrescriptionValidator {
 
     private final PrescriptionRepository prescriptionRepository;
 
-    public Prescription validatePrescription(CheckoutRequest request, User user, Map<Integer, Medicine> medicines) {
-
+    public Prescription validatePrescription(CheckoutRequest request, User user, Map<Integer, CheckoutMedicine> medicines) {
 
         Integer prescriptionId = request.prescriptionId();
 
         boolean prescriptionRequired = medicines.values().stream()
-                .anyMatch(med -> med.getPrescriptionNeed() == PrescriptionNeed.YES);
+                .anyMatch(med -> med.medicine().getPrescriptionNeed() == PrescriptionNeed.YES);
 
         if (prescriptionId == null) {
 

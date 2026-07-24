@@ -4,6 +4,7 @@ public class SwaggerConstants {
 
 
 
+
     private SwaggerConstants() {}
 
     public static final String BEARER_AUTH = "Bearer Authentication";
@@ -20,4 +21,10 @@ public class SwaggerConstants {
 
     public static final String ADMIN_USER_TAG_DESCRIPTION =
             "Administrative APIs for creating, searching and managing system users.";
+
+    public static final String BATCH_TAG = "Batch Management";
+
+    public static final String PAYMENT_TAG = "Payment Management";
+
+    public static final String ORDER_TAG = "Order Management";
 }

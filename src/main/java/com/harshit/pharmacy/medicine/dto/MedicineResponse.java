@@ -2,11 +2,13 @@ package com.harshit.pharmacy.medicine.dto;
 
 import com.harshit.pharmacy.medicine.enums.MedicineStatus;
 import com.harshit.pharmacy.medicine.enums.PrescriptionNeed;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Builder
 public record MedicineResponse(
 
         Integer medicineId,
@@ -19,20 +21,6 @@ public record MedicineResponse(
 
         String manufacturer,
 
-        LocalDate manufactureDate,
-
-        LocalDate expiryDate,
-
-        String batchNumber,
-
-        BigDecimal price,
-
-        BigDecimal discount,
-
-        BigDecimal sellingPrice,
-
-        Integer stockQuantity,
-
         String description,
 
         PrescriptionNeed prescriptionNeed,
@@ -41,9 +29,16 @@ public record MedicineResponse(
 
         String medicineImage,
 
+        Integer totalStock,
+
+        BigDecimal sellingPrice,
+
+        boolean available,
+
         LocalDateTime createdAt,
 
         LocalDateTime updatedAt
+
 
 
 ) {

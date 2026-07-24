@@ -30,6 +30,8 @@ public final class ErrorMessages {
     public static final String NEW_PASSWORD_IS_REQUIRED = "New password is required.";
     public static final String CONFIRM_PASSWORD_IS_REQUIRED = "Confirm password is required.";
 
+    public static final String BATCH_DOES_NOT_EXIST = "Batch doesn't exist.";
+
     public static final String PRESCRIPTION_FILE_REQUIRED = "Prescription file is required.";
     public static final String PRESCRIPTION_FILE_SIZE_EXCEEDED = "Prescription file size must not exceed" ;
     public static final String INVALID_PRESCRIPTION_FILE_TYPE = "Only PDF and JPG files are allowed.";

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/advance_pharmacy_db
+    url: jdbc:postgresql://localhost:5432/advanced_pharmacy_db
     username: postgres
     password: 12345
 

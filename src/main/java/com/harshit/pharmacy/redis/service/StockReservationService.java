@@ -10,4 +10,6 @@ public interface StockReservationService {
     void confirmReservation(String reservationId);
 
     void releaseReservation(String reservationId);
+
+
 }

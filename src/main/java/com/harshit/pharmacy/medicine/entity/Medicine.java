@@ -14,6 +14,8 @@ import org.hibernate.type.SqlTypes;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "medicine")
@@ -29,7 +31,7 @@ public class Medicine {
     @Column(name = "med_id")
     private Integer medicineId;
 
-    @Column(name = "med_name", nullable = false, length = 100)
+    @Column(name = "med_name", nullable = false, length = 100,unique = true)
     private String medicineName;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,24 +40,6 @@ public class Medicine {
 
     @Column(name = "manufacturer", nullable = false, length = 100)
     private String manufacturer;
-
-    @Column(name = "manufacture", nullable = false)
-    private LocalDate manufactureDate;
-
-    @Column(name = "expiry_date", nullable = false)
-    private LocalDate expiryDate;
-
-    @Column(name = "batch_no", nullable = false, unique = true, length = 100)
-    private String batchNumber;
-
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Column(name = "discount", nullable = false, precision = 5, scale = 2)
-    private BigDecimal discount;
-
-    @Column(name = "stock_qty", nullable = false)
-    private Integer stockQuantity;
 
     @Column(nullable = false, length = 300)
     private String description;
@@ -71,12 +55,19 @@ public class Medicine {
     @Column(name = "med_img")
     private String medicineImage;
 
+    @OneToMany(
+            mappedBy = "medicine",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<MedicineBatch> batches = new ArrayList<>();
+
     @CreationTimestamp
-    @Column(name = "created_date", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_date", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
 

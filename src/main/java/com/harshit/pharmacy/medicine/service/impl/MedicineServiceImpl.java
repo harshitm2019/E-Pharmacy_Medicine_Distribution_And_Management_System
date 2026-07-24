@@ -3,26 +3,29 @@ package com.harshit.pharmacy.medicine.service.impl;
 import com.harshit.pharmacy.category.entity.Category;
 import com.harshit.pharmacy.category.repository.CategoryRepository;
 import com.harshit.pharmacy.common.constants.ErrorMessages;
-import com.harshit.pharmacy.common.constants.FieldNames;
-import com.harshit.pharmacy.common.validator.DuplicateValidator;
-import com.harshit.pharmacy.exception.BusinessException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
-import com.harshit.pharmacy.medicine.entity.Medicine;
-import com.harshit.pharmacy.medicine.enums.MedicineStatus;
-import com.harshit.pharmacy.medicine.mapper.MedicineMapper;
+import com.harshit.pharmacy.medicine.dto.MedicineInventory;
 import com.harshit.pharmacy.medicine.dto.MedicineRequest;
 import com.harshit.pharmacy.medicine.dto.MedicineResponse;
 import com.harshit.pharmacy.medicine.dto.MedicineStatusRequest;
+import com.harshit.pharmacy.medicine.entity.Medicine;
+import com.harshit.pharmacy.medicine.enums.BatchStatus;
+import com.harshit.pharmacy.medicine.enums.MedicineStatus;
+import com.harshit.pharmacy.medicine.mapper.MedicineMapper;
+import com.harshit.pharmacy.medicine.repository.MedicineBatchRepository;
 import com.harshit.pharmacy.medicine.repository.MedicineRepository;
 import com.harshit.pharmacy.medicine.service.MedicineService;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,42 +34,39 @@ public class MedicineServiceImpl implements MedicineService {
 
     private final MedicineRepository medicineRepository;
     private final CategoryRepository categoryRepository;
-    private final DuplicateValidator duplicateValidator;
+    private final MedicineBatchRepository medicineBatchRepository;
 
     @Override
     public MedicineResponse createMedicine(MedicineRequest request) {
 
-        validateBatchNumberForCreate(request.batchNumber());
 
         Category category = getCategory(request.categoryId());
 
-        validateDates(request.manufactureDate(), request.expiryDate());
-
-        return MedicineMapper.toResponse(
-                medicineRepository.save(
-                        MedicineMapper.toEntity(request, category)
-                )
+        Medicine medicine = medicineRepository.save(
+                MedicineMapper.toEntity(request, category)
         );
 
+        return MedicineMapper.toResponse(
+                medicine,
+                0,
+                null,
+                false
+        );
 
     }
 
     @Override
     public MedicineResponse updateMedicine(Integer medicineId, MedicineRequest request) {
 
-
         Medicine medicine = getMedicine(medicineId);
-
-        validateBatchNumberForUpdate(medicine, request.batchNumber());
 
         Category category = getCategory(request.categoryId());
 
-        validateDates(request.manufactureDate(), request.expiryDate());
-
         MedicineMapper.updateEntity(medicine, request, category);
 
-        return MedicineMapper.toResponse(medicineRepository.save(medicine));
+        Medicine updatedMedicine = medicineRepository.save(medicine);
 
+        return buildMedicineResponse(updatedMedicine);
     }
 
 
@@ -74,7 +74,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public MedicineResponse getMedicineById(Integer medicineId) {
 
-        return MedicineMapper.toResponse(getMedicine(medicineId));
+        return buildMedicineResponse(getMedicine(medicineId));
 
     }
 
@@ -83,17 +83,42 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public Page<MedicineResponse> getAllActiveMedicines(Pageable pageable) {
 
-        return medicineRepository.findByStatus(MedicineStatus.ACTIVE, pageable)
-                .map(MedicineMapper::toResponse);
+
+        Page<Medicine> medicinePage = medicineRepository.findByStatus(MedicineStatus.ACTIVE, pageable);
+
+        if (medicinePage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        List<Integer> medicineIds = medicinePage.getContent()
+                .stream()
+                .map(Medicine::getMedicineId)
+                .toList();
+
+        Map<Integer, MedicineInventory> inventoryMap = medicineBatchRepository
+                .getMedicineInventories(medicineIds, BatchStatus.ACTIVE)
+                .stream()
+                .collect(Collectors.toMap(
+                        MedicineInventory::getMedicineId,
+                        Function.identity()
+                ));
+
+        return medicinePage.map(medicine ->
+                buildMedicineResponse(
+                        medicine,
+                        inventoryMap.get(medicine.getMedicineId())
+                )
+        );
 
     }
+
 
     @Override
     @Transactional(readOnly = true)
     public Page<MedicineResponse> getAllMedicines(Pageable pageable) {
 
         return medicineRepository.findAll(pageable)
-                .map(MedicineMapper::toResponse);
+                .map(this::buildMedicineResponse);
 
     }
 
@@ -110,9 +135,8 @@ public class MedicineServiceImpl implements MedicineService {
 
         return medicineRepository.saveAll(medicines)
                 .stream()
-                .map(MedicineMapper::toResponse)
+                .map(this::buildMedicineResponse)
                 .toList();
-
 
     }
 
@@ -120,14 +144,12 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public MedicineResponse getActiveMedicineById(Integer medicineId) {
 
-        return MedicineMapper.toResponse(
+        Medicine medicine = medicineRepository.findByMedicineIdAndStatus(
+                medicineId,
+                MedicineStatus.ACTIVE).orElseThrow(() ->
+                new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST));
 
-                medicineRepository.findByMedicineIdAndStatus(
-                        medicineId,
-                        MedicineStatus.ACTIVE
-                ).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST))
-
-        );
+        return buildMedicineResponse(medicine);
 
     }
 
@@ -141,6 +163,7 @@ public class MedicineServiceImpl implements MedicineService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Page<MedicineResponse> searchActiveMedicines(String keyword, Pageable pageable) {
 
         return medicineRepository
@@ -149,18 +172,20 @@ public class MedicineServiceImpl implements MedicineService {
                         MedicineStatus.ACTIVE,
                         pageable
                 )
-                .map(MedicineMapper::toResponse);
+                .map(this::buildMedicineResponse);
 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<MedicineResponse> searchMedicines(String keyword, Pageable pageable) {
 
-        return medicineRepository.findByMedicineNameContainingIgnoreCase(
-
-                 keyword.trim(),
-                 pageable)
-                .map(MedicineMapper::toResponse);
+        return medicineRepository
+                .findByMedicineNameContainingIgnoreCase(
+                        keyword.trim(),
+                        pageable
+                )
+                .map(this::buildMedicineResponse);
 
     }
 
@@ -172,33 +197,37 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
-    private void validateBatchNumberForCreate(String batchNumber) {
+    private MedicineResponse buildMedicineResponse(Medicine medicine) {
 
-        duplicateValidator.validate(
-                medicineRepository.existsByBatchNumberIgnoreCase(batchNumber.trim()),
-                FieldNames.BATCH_NUMBER
+        MedicineInventory inventory = medicineBatchRepository.getMedicineInventory(
+                medicine.getMedicineId(),
+                BatchStatus.ACTIVE
+        );
+
+        int stock = (inventory != null && inventory.getTotalStock() != null) ? inventory.getTotalStock() : 0;
+        BigDecimal price = (inventory != null) ? inventory.getSellingPrice() : null;
+
+        return MedicineMapper.toResponse(
+                medicine,
+                stock,
+                price,
+                stock > 0
         );
 
     }
 
-    private void validateBatchNumberForUpdate(Medicine medicine, String batchNumber) {
+    private MedicineResponse buildMedicineResponse(Medicine medicine, MedicineInventory inventory) {
 
-        medicineRepository.findByBatchNumberIgnoreCase(batchNumber.trim())
-                .ifPresent(existingMedicine -> {
+        int stock = (inventory != null && inventory.getTotalStock() != null) ? inventory.getTotalStock() : 0;
 
-                        duplicateValidator.validate(!existingMedicine.getMedicineId().equals(medicine.getMedicineId()),
-                                FieldNames.BATCH_NUMBER);
+        BigDecimal price = inventory != null ? inventory.getSellingPrice() : null;
 
-                });
-
+        return MedicineMapper.toResponse(
+                medicine,
+                stock,
+                price,
+                stock > 0
+        );
     }
-
-    private void validateDates(LocalDate manufactureDate, LocalDate expiryDate) {
-
-        if (!expiryDate.isAfter(manufactureDate))
-            throw new BusinessException(ErrorMessages.INVALID_EXPIRY_DATE);
-
-    }
-
 
 }

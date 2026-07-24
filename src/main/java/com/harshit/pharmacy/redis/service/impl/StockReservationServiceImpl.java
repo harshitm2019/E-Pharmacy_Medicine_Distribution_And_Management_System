@@ -2,7 +2,10 @@ package com.harshit.pharmacy.redis.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harshit.pharmacy.common.constants.ErrorMessages;
+import com.harshit.pharmacy.exception.ResourceNotFoundException;
+import com.harshit.pharmacy.medicine.entity.Medicine;
+import com.harshit.pharmacy.medicine.repository.MedicineRepository;
+import com.harshit.pharmacy.medicine.service.MedicineBatchService;
 import com.harshit.pharmacy.redis.constants.RedisConstants;
 import com.harshit.pharmacy.redis.dto.ReservationItem;
 import com.harshit.pharmacy.redis.dto.ReservationRequest;
@@ -13,10 +16,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +34,11 @@ public class StockReservationServiceImpl implements StockReservationService {
     private final StringRedisTemplate redisTemplate;
     private final DefaultRedisScript<Long> reserveStockScript;
     private final DefaultRedisScript<Long> releaseStockScript;
-    private final DefaultRedisScript<Long> confirmReservationScript;
+    private final DefaultRedisScript<String> confirmReservationScript;
     private final ObjectMapper objectMapper;
     private final RedisMapper redisMapper;
+    private final MedicineRepository medicineRepository;
+    private final MedicineBatchService medicineBatchService;
 
 
     @Override
@@ -83,19 +94,44 @@ public class StockReservationServiceImpl implements StockReservationService {
     }
 
     @Override
+    @Transactional
     public void confirmReservation(String reservationId) {
 
-        Long result = redisTemplate.execute(
+        String reservationJson = redisTemplate.execute(
+
                 confirmReservationScript,
-                List.of(RedisConstants.RESERVATION_KEY + reservationId),
+                List.of(
+
+                        RedisConstants.RESERVATION_KEY + reservationId,
+                        RedisConstants.ACTIVE_RESERVATIONS_KEY
+                ),
                 reservationId
+
         );
 
-        if (result == 0L) {
-            throw new IllegalStateException("Reservation not found.");
+        if (reservationJson == null) {
+
+            throw new ResourceNotFoundException("Reservation not found or expired");
+
+        }
+        ReservationRequest reservation = deserializeReservation(reservationJson);
+
+        List<Integer> medicineIds = reservation.items()
+                .stream()
+                .map(ReservationItem::medicineId)
+                .toList();
+
+
+        for (ReservationItem item : reservation.items()) {
+
+            medicineBatchService.deductStock(
+                    item.medicineId(),
+                    item.quantity()
+            );
+
         }
 
-    }
+        }
 
     @Override
     public void releaseReservation(String reservationId) {
@@ -109,5 +145,19 @@ public class StockReservationServiceImpl implements StockReservationService {
             throw new IllegalStateException("Reservation not found.");
         }
 
+    }
+
+
+    private ReservationRequest deserializeReservation(String reservationJson) {
+
+        try {
+
+            return objectMapper.readValue(reservationJson, ReservationRequest.class);
+
+        } catch (JsonProcessingException ex) {
+
+            throw new IllegalStateException("Failed to deserialize reservation.", ex);
+
+        }
     }
 }

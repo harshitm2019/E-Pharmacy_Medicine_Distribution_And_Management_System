@@ -60,6 +60,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<ApiResponse<Object>> handlePaymentFailedException(PaymentFailedException ex) {
+
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Object>> handleAuthenticationException(Exception ex){
 

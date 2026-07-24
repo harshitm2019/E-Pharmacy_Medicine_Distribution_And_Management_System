@@ -1,11 +1,13 @@
 package com.harshit.pharmacy.redis.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
+@Configuration
 public class RedisConfig {
 
 
@@ -41,13 +43,13 @@ public class RedisConfig {
     }
 
     @Bean
-    public DefaultRedisScript<Long> confirmReservationScript() {
+    public DefaultRedisScript<String> confirmReservationScript() {
 
-        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        DefaultRedisScript<String> script = new DefaultRedisScript<>();
 
-        script.setLocation(new ClassPathResource("scripts/confirm_reservation.lua"));
+        script.setLocation(new ClassPathResource("lua/confirm_reservation.lua"));
 
-        script.setResultType(Long.class);
+        script.setResultType(String.class);
 
         return script;
     }

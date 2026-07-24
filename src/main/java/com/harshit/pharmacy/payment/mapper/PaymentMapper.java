@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 public class PaymentMapper {
 
 
-    public Payment toEntity(Order order,String paymentMethod) {
+    public Payment toEntity(Order order,String paymentMethod,PaymentStatus paymentStatus) {
 
            return Payment.builder()
                 .order(order)
                 .paymentMethod(PaymentMethod.valueOf(paymentMethod.toUpperCase()))
-                .paymentStatus(PaymentStatus.SUCCESS)
+                .paymentStatus(paymentStatus)
                 .amount(order.getTotalAmount())
                 .paidDate(LocalDateTime.now())
                 .build();

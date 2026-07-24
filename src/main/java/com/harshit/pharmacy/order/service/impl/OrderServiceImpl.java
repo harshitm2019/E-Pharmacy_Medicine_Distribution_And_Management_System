@@ -6,6 +6,7 @@ import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
 import com.harshit.pharmacy.medicine.entity.Medicine;
 import com.harshit.pharmacy.medicine.repository.MedicineRepository;
+import com.harshit.pharmacy.order.dto.CheckoutMedicine;
 import com.harshit.pharmacy.order.dto.CheckoutRequest;
 import com.harshit.pharmacy.order.dto.CheckoutResponse;
 import com.harshit.pharmacy.order.dto.OrderResponse;
@@ -18,6 +19,7 @@ import com.harshit.pharmacy.order.repository.OrderRepository;
 import com.harshit.pharmacy.order.service.OrderService;
 import com.harshit.pharmacy.order.utils.Builder;
 import com.harshit.pharmacy.order.utils.Calculate;
+import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import com.harshit.pharmacy.payment.service.PaymentService;
 import com.harshit.pharmacy.prescription.entity.Prescription;
 import com.harshit.pharmacy.prescription.service.PrescriptionService;
@@ -40,17 +42,12 @@ import java.util.Map;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
-    private final MedicineRepository medicineRepository;
+
     private final StockReservationService stockReservationService;
-    private final PaymentService paymentService;
-    private final PrescriptionService prescriptionService;
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
     private final SecurityUtils securityUtils;
     private final MedicineValidator medicineValidator;
-    private final Builder builder;
-    private final Calculate calculate;
     private final PrescriptionValidator prescriptionValidator;
 
     @Override
@@ -58,30 +55,34 @@ public class OrderServiceImpl implements OrderService {
 
         User user = securityUtils.getCurrentUser();
 
-        Map<Integer, Medicine> medicines = medicineValidator.validateMedicines(request);
+        Map<Integer, CheckoutMedicine> medicines = medicineValidator.validateMedicines(request);
 
-        Prescription prescription = prescriptionValidator.validatePrescription(request,user,medicines);
+        Prescription prescription = prescriptionValidator.validatePrescription(request, user, medicines);
 
-        ReservationRequest reservationRequest = builder.buildReservationRequest(user.getUserId(), request, medicines);
+        ReservationRequest reservationRequest = Builder.buildReservationRequest(user.getUserId(), request, medicines);
 
         ReservationResponse reservationResponse = stockReservationService.reserveStock(reservationRequest);
 
         if (!reservationResponse.success())
             throw new BadRequestException(reservationResponse.message());
 
-        BigDecimal totalAmount = calculate.calculateTotalAmount(request, medicines);
+        if (PaymentMethod.COD.name().equalsIgnoreCase(request.paymentMethod()))
 
-        Order order = orderMapper.toEntity(user,request.shippingAddress(), totalAmount,prescription);
+            stockReservationService.confirmReservation(reservationRequest.reservationId());
 
-        List<OrderItem> orderItems =  builder.buildOrderItems(order, request, medicines);
+        BigDecimal totalAmount = Calculate.calculateTotalAmount(request, medicines);
+
+        Order order = orderMapper.toEntity(user, request.shippingAddress(), totalAmount, prescription);
+
+        List<OrderItem> orderItems = Builder.buildOrderItems(order, request, medicines);
 
         order.getOrderItems().addAll(orderItems);
-        
+
         Order savedOrder = null;
 
         try {
 
-             savedOrder = orderRepository.save(order);
+            savedOrder = orderRepository.save(order);
 
         } catch (Exception ex) {
 
@@ -90,10 +91,9 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-        return orderMapper.toCheckoutResponse(savedOrder,reservationResponse.reservationId());
+        return orderMapper.toCheckoutResponse(savedOrder, reservationResponse.reservationId());
 
     }
-
 
 
     @Override

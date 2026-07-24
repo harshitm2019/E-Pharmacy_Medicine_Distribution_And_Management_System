@@ -4,23 +4,17 @@
 -- ARGV
 -- reservationId
 
-local reservation = redis.call(
-    'GET',
-    KEYS[1]
-)
+local reservationKey = KEYS[1]
+local activeReservationsKey = KEYS[2]
+local reservationId = ARGV[1]
+
+local reservation = redis.call('GET', reservationKey)
 
 if not reservation then
-    return 0
+    return nil
 end
 
-redis.call(
-    'DEL',
-    KEYS[1]
-)
+redis.call('DEL', reservationKey)
+redis.call('ZREM', activeReservationsKey, reservationId)
 
-redis.call(
-    'ZREM',
-    'active_reservations',
-    ARGV[1]
-)
-return 1
+return reservation

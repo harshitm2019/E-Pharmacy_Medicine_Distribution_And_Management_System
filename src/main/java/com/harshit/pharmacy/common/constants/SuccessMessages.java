@@ -35,5 +35,15 @@ public final class SuccessMessages {
     public static final String ORDER_FETCHED_SUCCESSFULLY = "Order fetched successfully";
     public static final String ORDER_CANCELLED_SUCCESSFULLY = "Order cancelled successfully";
 
+    public static final String BATCH_CREATED = "Batch created successfully.";
+    public static final String BATCH_UPDATED = "Batch updated successfully.";
+    public static final String BATCH_FETCHED = "Batch fetched successfully.";
+    public static final String ALL_BATCHES_FETCHED = "Batches fetched successfully.";
+    public static final String BATCH_STATUS_UPDATED = "Batch status updated successfully.";
+
+    public static final String PAYMENT_SUCCESSFUL = "Payment successful";
+    public static final String PAYMENTS_FETCHED_SUCCESSFULLY = "Payments fetched successfully";
+    public static final String PAYMENT_FETCHED_SUCCESSFULLY = "Payment fetched successfully";
+
 
 }

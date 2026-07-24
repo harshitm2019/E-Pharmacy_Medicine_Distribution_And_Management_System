@@ -43,11 +43,11 @@ public class UserProfile {
     private String pin;
 
     @CreationTimestamp
-    @Column(name = "created_date", nullable = false,updatable = false)
+    @Column(name = "created_at", nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_date", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
 

@@ -36,12 +36,10 @@ public class User {
     @Column(nullable = false, unique = true, length = 15)
     private String phone;
 
-    @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private UserRole role;
 
-    @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     private UserStatus status;

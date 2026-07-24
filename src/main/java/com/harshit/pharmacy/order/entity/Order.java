@@ -7,6 +7,7 @@ import com.harshit.pharmacy.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
@@ -61,6 +62,10 @@ public class Order {
     )
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 
 }

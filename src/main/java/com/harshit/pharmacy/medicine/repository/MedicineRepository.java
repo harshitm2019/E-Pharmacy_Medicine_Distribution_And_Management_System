@@ -13,10 +13,6 @@ import java.util.Optional;
 public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
 
 
-    boolean existsByBatchNumberIgnoreCase(String batchNumber);
-
-    Optional<Medicine> findByBatchNumberIgnoreCase(String batchNumber);
-
     Page<Medicine> findByStatus(MedicineStatus status, Pageable pageable);
 
     Page<Medicine> findByMedicineNameContainingIgnoreCaseAndStatus(String keyword, MedicineStatus status, Pageable pageable);
