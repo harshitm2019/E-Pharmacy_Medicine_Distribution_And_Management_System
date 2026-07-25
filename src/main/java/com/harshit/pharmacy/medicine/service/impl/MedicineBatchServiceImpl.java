@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,11 +70,9 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
 
         MedicineBatchMapper.updateEntity(batch, request);
 
-        MedicineBatch updatedBatch = batchRepository.save(batch);
+        inventorySyncService.syncMedicineStock(batch.getMedicine().getMedicineId());
 
-        inventorySyncService.syncMedicineStock(updatedBatch.getMedicine().getMedicineId());
-
-        return MedicineBatchMapper.toResponse(updatedBatch);
+        return MedicineBatchMapper.toResponse(batch);
 
     }
 
@@ -119,24 +116,18 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
 
         BatchStatus status = BatchStatus.valueOf(request.status());
 
-        batches.forEach(batch -> batch.setStatus(status));
-
-        List<MedicineBatch> updatedBatches = batchRepository.saveAll(batches);
-
         Set<Integer> medicineIds = new HashSet<>();
 
-        for (MedicineBatch batch : updatedBatches) {
+        for (MedicineBatch batch : batches) {
+            batch.setStatus(status);
             medicineIds.add(batch.getMedicine().getMedicineId());
         }
 
-        for (Integer medicineId : medicineIds) {
-            inventorySyncService.syncMedicineStock(medicineId);
-        }
+        medicineIds.forEach(inventorySyncService::syncMedicineStock);
 
-        return updatedBatches.stream()
+        return batches.stream()
                 .map(MedicineBatchMapper::toResponse)
                 .toList();
-
     }
 
     @Override
@@ -154,8 +145,6 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
         }
 
         int remainingQuantity = quantity;
-
-        List<MedicineBatch> updatedBatches = new ArrayList<>();
 
         for (MedicineBatch batch : batches) {
 
@@ -178,20 +167,15 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
 
                 remainingQuantity = 0;
             }
-
-            updatedBatches.add(batch);
         }
 
         if (remainingQuantity > 0) {
 
-            throw new BadRequestException("Unable to deduct stock for medicine ID: " + medicineId);
+            throw new BadRequestException("Insufficient stock available for medicine ID: " + medicineId);
 
         }
 
-        batchRepository.saveAll(updatedBatches);
-
         inventorySyncService.syncMedicineStock(medicineId);
-
 
     }
 
@@ -200,29 +184,24 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
 
         LocalDate cutoffDate = LocalDate.now().plusDays(30);
 
-        List<MedicineBatch> batches =
-                batchRepository.findByStatusAndExpiryDateLessThanEqual(
+        List<Integer> affectedMedicineIds = batchRepository
+                .findDistinctMedicineIdsByStatusAndExpiryDateLessThanEqual(
                         BatchStatus.ACTIVE,
                         cutoffDate
                 );
 
 
-        if (batches.isEmpty()) {
+        if (affectedMedicineIds.isEmpty()) {
             return;
         }
 
-        Set<Integer> medicineIds = new HashSet<>();
+        int rowsAffected = batchRepository.updateStatusForExpiredBatches(
+                BatchStatus.ACTIVE,
+                BatchStatus.EXPIRED,
+                cutoffDate
+        );
 
-        for (MedicineBatch batch : batches) {
-
-            batch.setStatus(BatchStatus.EXPIRED);
-
-            medicineIds.add(batch.getMedicine().getMedicineId());
-        }
-
-        batchRepository.saveAll(batches);
-
-        medicineIds.forEach(inventorySyncService::syncMedicineStock);
+        affectedMedicineIds.forEach(inventorySyncService::syncMedicineStock);
 
     }
 

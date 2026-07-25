@@ -15,6 +15,7 @@ import com.harshit.pharmacy.medicine.mapper.MedicineMapper;
 import com.harshit.pharmacy.medicine.repository.MedicineBatchRepository;
 import com.harshit.pharmacy.medicine.repository.MedicineRepository;
 import com.harshit.pharmacy.medicine.service.MedicineService;
+import com.harshit.pharmacy.medicine.utils.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class MedicineServiceImpl implements MedicineService {
 
     private final MedicineRepository medicineRepository;
     private final CategoryRepository categoryRepository;
-    private final MedicineBatchRepository medicineBatchRepository;
+    private final Builder builder;
 
     @Override
     public MedicineResponse createMedicine(MedicineRequest request) {
@@ -64,9 +65,7 @@ public class MedicineServiceImpl implements MedicineService {
 
         MedicineMapper.updateEntity(medicine, request, category);
 
-        Medicine updatedMedicine = medicineRepository.save(medicine);
-
-        return buildMedicineResponse(updatedMedicine);
+        return builder.buildMedicineResponse(medicine);
     }
 
 
@@ -74,7 +73,7 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public MedicineResponse getMedicineById(Integer medicineId) {
 
-        return buildMedicineResponse(getMedicine(medicineId));
+        return builder.buildMedicineResponse(getMedicine(medicineId));
 
     }
 
@@ -84,41 +83,22 @@ public class MedicineServiceImpl implements MedicineService {
     public Page<MedicineResponse> getAllActiveMedicines(Pageable pageable) {
 
 
-        Page<Medicine> medicinePage = medicineRepository.findByStatus(MedicineStatus.ACTIVE, pageable);
-
-        if (medicinePage.isEmpty()) {
-            return Page.empty(pageable);
-        }
-
-        List<Integer> medicineIds = medicinePage.getContent()
-                .stream()
-                .map(Medicine::getMedicineId)
-                .toList();
-
-        Map<Integer, MedicineInventory> inventoryMap = medicineBatchRepository
-                .getMedicineInventories(medicineIds, BatchStatus.ACTIVE)
-                .stream()
-                .collect(Collectors.toMap(
-                        MedicineInventory::getMedicineId,
-                        Function.identity()
-                ));
-
-        return medicinePage.map(medicine ->
-                buildMedicineResponse(
-                        medicine,
-                        inventoryMap.get(medicine.getMedicineId())
+        return builder.buildMedicineResponses(
+                medicineRepository.findByStatus(
+                        MedicineStatus.ACTIVE,
+                        pageable
                 )
         );
 
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public Page<MedicineResponse> getAllMedicines(Pageable pageable) {
 
-        return medicineRepository.findAll(pageable)
-                .map(this::buildMedicineResponse);
+        return builder.buildMedicineResponses(
+                medicineRepository.findAll(pageable)
+        );
 
     }
 
@@ -131,12 +111,11 @@ public class MedicineServiceImpl implements MedicineService {
         if (medicines.size() != request.medicineIds().size())
             throw new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST);
 
-        medicines.forEach(medicine -> medicine.setStatus(MedicineStatus.valueOf(request.status())));
 
-        return medicineRepository.saveAll(medicines)
-                .stream()
-                .map(this::buildMedicineResponse)
-                .toList();
+        medicines.forEach(medicine -> medicine.setStatus(MedicineStatus.valueOf(request.status()))
+        );
+
+        return builder.buildMedicineResponses(medicines);
 
     }
 
@@ -149,7 +128,7 @@ public class MedicineServiceImpl implements MedicineService {
                 MedicineStatus.ACTIVE).orElseThrow(() ->
                 new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST));
 
-        return buildMedicineResponse(medicine);
+        return builder.buildMedicineResponse(medicine);
 
     }
 
@@ -166,13 +145,13 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public Page<MedicineResponse> searchActiveMedicines(String keyword, Pageable pageable) {
 
-        return medicineRepository
-                .findByMedicineNameContainingIgnoreCaseAndStatus(
+        return builder.buildMedicineResponses(
+                medicineRepository.findByMedicineNameContainingIgnoreCaseAndStatus(
                         keyword.trim(),
                         MedicineStatus.ACTIVE,
                         pageable
                 )
-                .map(this::buildMedicineResponse);
+        );
 
     }
 
@@ -180,12 +159,12 @@ public class MedicineServiceImpl implements MedicineService {
     @Transactional(readOnly = true)
     public Page<MedicineResponse> searchMedicines(String keyword, Pageable pageable) {
 
-        return medicineRepository
-                .findByMedicineNameContainingIgnoreCase(
+        return builder.buildMedicineResponses(
+                medicineRepository.findByMedicineNameContainingIgnoreCase(
                         keyword.trim(),
                         pageable
                 )
-                .map(this::buildMedicineResponse);
+        );
 
     }
 
@@ -195,39 +174,6 @@ public class MedicineServiceImpl implements MedicineService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(ErrorMessages.CATEGORY_DOES_NOT_EXIST));
 
-    }
-
-    private MedicineResponse buildMedicineResponse(Medicine medicine) {
-
-        MedicineInventory inventory = medicineBatchRepository.getMedicineInventory(
-                medicine.getMedicineId(),
-                BatchStatus.ACTIVE
-        );
-
-        int stock = (inventory != null && inventory.getTotalStock() != null) ? inventory.getTotalStock() : 0;
-        BigDecimal price = (inventory != null) ? inventory.getSellingPrice() : null;
-
-        return MedicineMapper.toResponse(
-                medicine,
-                stock,
-                price,
-                stock > 0
-        );
-
-    }
-
-    private MedicineResponse buildMedicineResponse(Medicine medicine, MedicineInventory inventory) {
-
-        int stock = (inventory != null && inventory.getTotalStock() != null) ? inventory.getTotalStock() : 0;
-
-        BigDecimal price = inventory != null ? inventory.getSellingPrice() : null;
-
-        return MedicineMapper.toResponse(
-                medicine,
-                stock,
-                price,
-                stock > 0
-        );
     }
 
 }

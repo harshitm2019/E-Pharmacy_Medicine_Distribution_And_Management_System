@@ -3,9 +3,12 @@ package com.harshit.pharmacy.medicine.repository;
 import com.harshit.pharmacy.medicine.dto.MedicineInventory;
 import com.harshit.pharmacy.medicine.entity.MedicineBatch;
 import com.harshit.pharmacy.medicine.enums.BatchStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
@@ -63,10 +66,32 @@ public interface MedicineBatchRepository extends JpaRepository<MedicineBatch, In
             BatchStatus status
     );
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<MedicineBatch> findByMedicineMedicineIdAndStatusOrderByExpiryDateAsc(
             Integer medicineId,
             BatchStatus status
     );
 
-    List<MedicineBatch> findByStatusAndExpiryDateLessThanEqual(BatchStatus batchStatus, LocalDate cutoffDate);
+    @Query("""
+       SELECT DISTINCT mb.medicine.medicineId
+       FROM MedicineBatch mb
+       WHERE mb.status = :status
+       AND mb.expiryDate <= :cutoffDate
+       """)
+    List<Integer> findDistinctMedicineIdsByStatusAndExpiryDateLessThanEqual(
+            BatchStatus status,
+            LocalDate cutoffDate);
+
+
+    @Modifying
+    @Query("""
+       UPDATE MedicineBatch mb
+       SET mb.status = :expiredStatus
+       WHERE mb.status = :activeStatus
+       AND mb.expiryDate <= :cutoffDate
+       """)
+    int updateStatusForExpiredBatches(
+            BatchStatus activeStatus,
+            BatchStatus expiredStatus,
+            LocalDate cutoffDate);
 }
