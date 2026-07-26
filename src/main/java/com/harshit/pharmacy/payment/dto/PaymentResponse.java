@@ -1,8 +1,11 @@
-package com.harshit.pharmacy.order.dto;
+package com.harshit.pharmacy.payment.dto;
+
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Builder
 public record PaymentResponse(
 
 
@@ -16,7 +19,9 @@ public record PaymentResponse(
 
         BigDecimal amount,
 
-        LocalDateTime paidDate
+        LocalDateTime paidDate,
+
+        boolean confirmOrder
 
 
 ) {

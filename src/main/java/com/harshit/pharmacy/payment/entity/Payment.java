@@ -1,10 +1,11 @@
 package com.harshit.pharmacy.payment.entity;
 
+import com.harshit.pharmacy.order.entity.Order;
 import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import com.harshit.pharmacy.payment.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.core.annotation.Order;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -75,21 +75,64 @@ public class SecurityConfig {
                                 "/api/v1/medicines/**"
                         ).permitAll()
 
-                        // Admin APIs
+                        // ==========================
+                        // ADMIN APIs
+                        // ==========================
                         .requestMatchers("/api/v1/admin/**")
                         .hasRole("ADMIN")
 
-                        // Prescription APIs
-                        .requestMatchers(HttpMethod.POST, "/api/v1/prescriptions/**")
+                        // ==========================
+                        // ORDER APIs
+                        // ==========================
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/orders/checkout")
                         .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/prescriptions/**")
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/orders/**")
                         .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/prescriptions/**")
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/v1/orders/*")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/v1/orders/*/cancel")
+                        .hasRole("CUSTOMER")
+
+                        // ==========================
+                        // PAYMENT APIs
+                        // ==========================
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/payments/online")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/payments/**")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/api/v1/payments/cod/**")
+                        .hasRole("DELIVERY_BOY")
+
+                        // ==========================
+                        // PRESCRIPTION APIs
+                        // ==========================
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/prescriptions/**")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/v1/prescriptions/**")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/prescriptions/**")
                         .hasAnyRole("ADMIN", "CUSTOMER")
 
-                        // Authenticated User APIs
+                        // ==========================
+                        // USER APIs
+                        // ==========================
                         .requestMatchers("/api/v1/users/**")
                         .hasAnyRole("ADMIN", "CUSTOMER", "DELIVERY_BOY")
 

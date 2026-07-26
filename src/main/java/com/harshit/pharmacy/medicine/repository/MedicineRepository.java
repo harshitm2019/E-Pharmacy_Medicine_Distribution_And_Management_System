@@ -2,11 +2,17 @@ package com.harshit.pharmacy.medicine.repository;
 
 import com.harshit.pharmacy.medicine.entity.Medicine;
 import com.harshit.pharmacy.medicine.enums.MedicineStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,4 +32,15 @@ public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
     Optional<Medicine> findByMedicineIdAndStatus(Integer medicineId, MedicineStatus status);
 
     Page<Medicine> findByMedicineNameContainingIgnoreCase(String keyword, Pageable pageable);
+
+    List<Medicine> findByMedicineIdIn(Collection<Integer> medicineIds);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+          SELECT m
+          FROM Medicine m
+          WHERE m.medicineId IN :medicineIds
+          """)
+    List<Medicine> findAllForUpdate(@Param("medicineIds") Collection<Integer> medicineIds);
+
 }

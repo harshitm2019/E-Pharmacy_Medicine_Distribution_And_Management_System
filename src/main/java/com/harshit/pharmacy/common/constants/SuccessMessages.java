@@ -29,6 +29,17 @@ public final class SuccessMessages {
     public static final String PRESCRIPTION_UPLOADED = "Prescription uploaded successfully";
     public static final String PRESCRIPTION_REPLACED = "Prescription replaced successfully";
     public static final String PRESCRIPTION_FETCHED_SUCCESSFULLY = "Prescription fetched successfully";
-
+    public static final String PAYMENT_PROCESSED_SUCCESSFULLY = "Payment processed successfully.";
+    public static final String PAYMENT_COLLECTED_SUCCESSFULLY = "Cash on Delivery payment collected successfully.";
+    public static final String PAYMENT_FETCHED_SUCCESSFULLY = "Payment fetched successfully.";
+    public static final String PAYMENTS_FETCHED_SUCCESSFULLY = "Payments fetched successfully.";
+    public static final String PENDING_ORDERS_FETCHED_SUCCESSFULLY = "Pending orders fetched successfully.";
+    public static final String ORDER_FETCHED_SUCCESSFULLY = "Order fetched successfully.";
+    public static final String ORDER_STATUS_UPDATED_SUCCESSFULLY = "Order status updated successfully.";
+    public static final String PRESCRIPTION_STATUS_UPDATED_SUCCESSFULLY = "Prescription status updated successfully.";
+    public static final String ORDER_PLACED_SUCCESSFULLY = "Order placed successfully.";
+    public static final String ORDERS_FETCHED_SUCCESSFULLY = "Orders fetched successfully.";
+    public static final String ORDER_CANCELLED_SUCCESSFULLY = "Order cancelled successfully.";
+    public static final String ORDER_UPDATED_SUCCESSFULLY = "Order updated successfully.";
 
 }

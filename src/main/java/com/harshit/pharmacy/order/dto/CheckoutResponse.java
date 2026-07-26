@@ -1,7 +1,10 @@
 package com.harshit.pharmacy.order.dto;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
+@Builder
 public record CheckoutResponse(
 
 
@@ -13,7 +16,9 @@ public record CheckoutResponse(
 
         String paymentStatus,
 
-        String message
+        String message,
+
+        String paymentMethod
 
 
 

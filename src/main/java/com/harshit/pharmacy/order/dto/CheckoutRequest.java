@@ -16,12 +16,14 @@ public record CheckoutRequest(
         String shippingAddress,
 
         @NotNull(message = "Payment method is required.")
-        @Pattern(regexp = "UPI|CARD|NET_BANKING|COD",
+        @Pattern(regexp = "UPI|DEBIT_CARD|CREDIT_CARD|NET_BANKING|COD",
                 message = "Payment method must be UPI, CARD, NET_BANKING or COD.")
         String paymentMethod,
 
         @NotEmpty(message = "Cart cannot be empty.")
-        List<@Valid CartItemRequest> items
+        List<@Valid CartItemRequest> items,
+
+        Integer prescriptionId
 
 
 ) {
