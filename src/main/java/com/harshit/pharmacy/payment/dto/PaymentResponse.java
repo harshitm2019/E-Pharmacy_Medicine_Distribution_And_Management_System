@@ -19,9 +19,8 @@ public record PaymentResponse(
 
         BigDecimal amount,
 
-        LocalDateTime paidDate,
+        LocalDateTime paidDate
 
-        boolean confirmOrder
 
 
 ) {

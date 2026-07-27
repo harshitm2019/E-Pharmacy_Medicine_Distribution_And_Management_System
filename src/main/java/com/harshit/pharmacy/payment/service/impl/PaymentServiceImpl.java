@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -73,9 +74,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         }
 
-        Payment savedPayment =  paymentRepository.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
         return PaymentMapper.toPaymentResponse(savedPayment);
-
 
 
     }
@@ -146,15 +146,36 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void updatePaymentMethod(Order order, String paymentMethod) {
+    public boolean updatePaymentMethod(Order order, String paymentMethod) {
 
-        Payment payment = paymentRepository.findByOrder(order)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Payment not found."));
+        Optional<Payment> paymentOptional = paymentRepository.findByOrder(order);
 
-        payment.setPaymentMethod(PaymentMethod.valueOf(paymentMethod));
-        payment.setPaymentStatus(PaymentStatus.PENDING);
-        payment.setPaidDate(null);
+        PaymentMethod newPaymentMethod = PaymentMethod.valueOf(paymentMethod);
+
+        if (paymentOptional.isPresent()) {
+
+            Payment payment = paymentOptional.get();
+
+            payment.setPaymentMethod(newPaymentMethod);
+            payment.setPaymentStatus(PaymentStatus.PENDING);
+            payment.setPaidDate(null);
+
+        } else {
+
+            if (newPaymentMethod == PaymentMethod.COD)
+                createCodPayment(order);
+
+        }
+
+        if (newPaymentMethod != PaymentMethod.COD)
+            return false;
+
+
+        if (order.getPrescription() == null)
+            return true;
+
+
+        return order.getPrescription().getStatus() == PrescriptionStatus.APPROVED;
 
     }
 }

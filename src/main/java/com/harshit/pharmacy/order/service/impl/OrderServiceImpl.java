@@ -45,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
     private final CheckoutValidator validator;
     private final PaymentService paymentService;
     private final PrescriptionService prescriptionService;
+    private final OrderMapper orderMapper;
 
 
 
@@ -71,10 +72,10 @@ public class OrderServiceImpl implements OrderService {
 
         CalculationResult calculationResult = calculateOrder(request.items(), medicineMap);
 
-        Order order = OrderMapper.buildOrder(user, prescription, request.shippingAddress(),
+        Order order = orderMapper.buildOrder(user, prescription, request.shippingAddress(),
                 calculationResult.totalAmount());
 
-        List<OrderItem> orderItems = OrderMapper.buildOrderItems(order, calculationResult);
+        List<OrderItem> orderItems = orderMapper.buildOrderItems(order, calculationResult);
 
         order.setOrderItems(orderItems);
 
@@ -90,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 
             }
         }
-        return OrderMapper.toCheckoutResponse(savedOrder,PaymentMethod.valueOf(request.paymentMethod()));
+        return orderMapper.toCheckoutResponse(savedOrder,PaymentMethod.valueOf(request.paymentMethod()));
 
     }
 
@@ -104,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByUser(user);
 
         return orders.stream()
-                .map(OrderMapper::toOrderResponse)
+                .map(orderMapper::toOrderResponse)
                 .toList();
 
     }
@@ -119,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
                 .findByOrderIdAndUser(orderId, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
 
-        return OrderMapper.toOrderResponse(order);
+        return orderMapper.toOrderResponse(order);
 
     }
 
@@ -211,7 +212,8 @@ public class OrderServiceImpl implements OrderService {
 
             if (StringUtils.hasText(request.paymentMethod())) {
                 ensureOrderIsPending(status, "Payment method can only be updated while the order is pending.");
-                paymentService.updatePaymentMethod(order, request.paymentMethod());
+                  if(paymentService.updatePaymentMethod(order, request.paymentMethod()))
+                      confirmOrder(orderId);
             }
         }
 

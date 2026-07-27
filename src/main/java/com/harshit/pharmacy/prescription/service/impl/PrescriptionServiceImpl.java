@@ -46,11 +46,20 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
         String filePath = storageService.uploadPrescription(prescriptionFile);
 
-        Prescription prescription = prescriptionMapper.toEntity(request,filePath,currentUser);
+        try {
 
-        Prescription savedPrescription = prescriptionRepository.save(prescription);
+            Prescription prescription = prescriptionMapper.toEntity(request, filePath, currentUser);
 
-        return prescriptionMapper.toResponse(savedPrescription);
+            Prescription savedPrescription = prescriptionRepository.save(prescription);
+
+            return prescriptionMapper.toResponse(savedPrescription);
+
+        } catch (Exception ex) {
+
+            storageService.deletePrescription(filePath);
+            throw new BadRequestException(ErrorMessages.UNABLE_TO_UPLOAD_PRESCRIPTION);
+
+        }
 
     }
     @Override

@@ -1,5 +1,6 @@
 package com.harshit.pharmacy.order.dto;
 
+import com.harshit.pharmacy.prescription.dto.PrescriptionResponse;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -21,7 +22,9 @@ public record OrderResponse(
 
         LocalDateTime orderDate,
 
-        List<OrderItemResponse> items
+        List<OrderItemResponse> items,
+
+        PrescriptionResponse prescription
 
 
 ) {

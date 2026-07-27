@@ -10,6 +10,7 @@ import com.harshit.pharmacy.prescription.dto.PrescriptionDecisionRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,14 +27,13 @@ public class AdminOrderController {
 
     @GetMapping("/pending")
     public ResponseEntity<ApiResponse<Page<OrderResponse>>> getPendingOrders(
+            @ParameterObject
             @PageableDefault(sort = "orderDate") Pageable pageable) {
 
         Page<OrderResponse> response = orderService.getPendingOrders(pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.success(
-                        SuccessMessages.PENDING_ORDERS_FETCHED_SUCCESSFULLY,
-                        response)
+                ApiResponse.success(SuccessMessages.PENDING_ORDERS_FETCHED_SUCCESSFULLY, response)
         );
     }
 
@@ -45,9 +45,7 @@ public class AdminOrderController {
                 orderService.getPendingOrder(orderId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.success(
-                        SuccessMessages.ORDER_FETCHED_SUCCESSFULLY,
-                        response)
+                ApiResponse.success(SuccessMessages.ORDER_FETCHED_SUCCESSFULLY, response)
         );
     }
 

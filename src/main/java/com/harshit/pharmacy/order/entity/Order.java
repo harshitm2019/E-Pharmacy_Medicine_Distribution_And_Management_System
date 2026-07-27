@@ -42,14 +42,14 @@ public class Order {
     @JoinColumn(name = "presc_id")
     private Prescription prescription;
 
-    @JdbcTypeCode(SqlTypes.ENUM)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "order_status", nullable = false)
     private OrderStatus orderStatus;
 
     @Column(name = "shipping_address", nullable = false, length = 200)
     private String shippingAddress;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "payment_status", nullable = false)
     private OrderPaymentStatus paymentStatus;
 

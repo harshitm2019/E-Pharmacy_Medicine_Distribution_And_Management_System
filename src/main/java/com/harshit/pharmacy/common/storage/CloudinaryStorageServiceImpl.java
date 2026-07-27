@@ -27,7 +27,10 @@ public class CloudinaryStorageServiceImpl implements StorageService{
             Map<?, ?> response = cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap(
-                            "folder", "prescriptions"
+                            "folder", "prescriptions",
+                            "resource_type", "raw",
+                            "type", "upload"
+
                     )
             );
 
@@ -46,6 +49,7 @@ public class CloudinaryStorageServiceImpl implements StorageService{
 
         return cloudinary.url()
                 .secure(true)
+                .resourceType("raw")
                 .generate(filePath);
 
     }
@@ -55,7 +59,7 @@ public class CloudinaryStorageServiceImpl implements StorageService{
 
         try {
 
-            cloudinary.uploader().destroy(filePath, ObjectUtils.emptyMap());
+            cloudinary.uploader().destroy(filePath, ObjectUtils.asMap("resource_type", "raw"));
 
         } catch (IOException ex) {
 

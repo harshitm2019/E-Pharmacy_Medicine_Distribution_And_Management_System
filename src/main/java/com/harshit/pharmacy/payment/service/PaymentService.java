@@ -19,6 +19,6 @@ public interface PaymentService {
 
     void createCodPayment(Order order);
 
-    void updatePaymentMethod(Order order, String paymentMethod);
+    boolean updatePaymentMethod(Order order, String paymentMethod);
 
 }

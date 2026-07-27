@@ -10,7 +10,9 @@ import com.harshit.pharmacy.order.enums.OrderPaymentStatus;
 import com.harshit.pharmacy.order.enums.OrderStatus;
 import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import com.harshit.pharmacy.prescription.entity.Prescription;
+import com.harshit.pharmacy.prescription.mapper.PrescriptionMapper;
 import com.harshit.pharmacy.user.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,9 +20,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+@Component
+@RequiredArgsConstructor
 public class OrderMapper {
 
-    public static CheckoutResponse toCheckoutResponse(Order order, PaymentMethod paymentMethod) {
+    private final PrescriptionMapper prescriptionMapper;
+
+    public  CheckoutResponse toCheckoutResponse(Order order, PaymentMethod paymentMethod) {
 
         return CheckoutResponse.builder()
                 .orderId(order.getOrderId())
@@ -33,7 +39,7 @@ public class OrderMapper {
 
     }
 
-    public static Order buildOrder(User user, Prescription prescription, String shippingAddress,
+    public  Order buildOrder(User user, Prescription prescription, String shippingAddress,
                                    BigDecimal totalAmount) {
 
         return Order.builder()
@@ -48,7 +54,7 @@ public class OrderMapper {
 
     }
 
-    public static List<OrderItem> buildOrderItems(
+    public  List<OrderItem> buildOrderItems(
             Order order,
             CalculationResult calculationResult
     ) {
@@ -67,7 +73,7 @@ public class OrderMapper {
 
     }
 
-    public static OrderResponse toOrderResponse(Order order) {
+    public OrderResponse toOrderResponse(Order order) {
 
         return OrderResponse.builder()
                 .orderId(order.getOrderId())
@@ -81,12 +87,15 @@ public class OrderMapper {
                                 .stream()
                                 .map(OrderMapper::toOrderItemResponse)
                                 .toList())
+                 .prescription(order.getPrescription() != null
+                ? prescriptionMapper.toResponse(order.getPrescription())
+                : null)
 
                 .build();
 
     }
 
-    private static OrderItemResponse toOrderItemResponse(OrderItem item) {
+    private static  OrderItemResponse toOrderItemResponse(OrderItem item) {
 
         return OrderItemResponse.builder()
                 .medicineId(item.getMedicine().getMedicineId())
@@ -98,5 +107,7 @@ public class OrderMapper {
                 .build();
 
     }
+
+
 
 }

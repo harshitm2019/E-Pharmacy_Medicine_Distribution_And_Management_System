@@ -5,6 +5,8 @@ import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import com.harshit.pharmacy.payment.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 
 import java.math.BigDecimal;
@@ -30,18 +32,18 @@ public class Payment {
     @JoinColumn(name = "order_id", nullable = false, unique = true)
     private Order order;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "pay_method", nullable = false)
     private PaymentMethod paymentMethod;
 
     @Column(name = "amt", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "pay_status", nullable = false)
     private PaymentStatus paymentStatus;
 
-    @Column(name = "paid_date", nullable = false)
+    @Column(name = "paid_date")
     private LocalDateTime paidDate;
 
 

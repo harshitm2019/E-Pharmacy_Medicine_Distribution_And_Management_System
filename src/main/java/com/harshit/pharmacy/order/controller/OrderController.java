@@ -1,6 +1,8 @@
 package com.harshit.pharmacy.order.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
 import com.harshit.pharmacy.order.dto.CheckoutRequest;
@@ -8,11 +10,14 @@ import com.harshit.pharmacy.order.dto.CheckoutResponse;
 import com.harshit.pharmacy.order.dto.OrderResponse;
 import com.harshit.pharmacy.order.dto.UpdateOrderRequest;
 import com.harshit.pharmacy.order.service.OrderService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +30,7 @@ public class OrderController {
 
 
     private final OrderService orderService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/checkout")
     public ResponseEntity<ApiResponse<CheckoutResponse>> checkout(
@@ -66,11 +72,15 @@ public class OrderController {
     @PatchMapping(value = "/{orderId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<Void>> updateOrder(
             @PathVariable Integer orderId,
-            @Valid
-            @RequestPart("request")
-            UpdateOrderRequest request,
+            @RequestPart(value = "request", required = false) String requestJson,
             @RequestPart(value = "prescription", required = false)
-            MultipartFile prescription) {
+            MultipartFile prescription) throws JsonProcessingException {
+
+        UpdateOrderRequest request = null;
+
+        if (StringUtils.hasText(requestJson)) {
+            request = objectMapper.readValue(requestJson, UpdateOrderRequest.class);
+        }
 
         orderService.updateOrder(orderId, request, prescription);
 

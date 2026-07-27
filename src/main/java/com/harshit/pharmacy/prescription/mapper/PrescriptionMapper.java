@@ -27,7 +27,7 @@ public class PrescriptionMapper {
 
     }
 
-    public PrescriptionResponse toResponse(Prescription prescription) {
+    public  PrescriptionResponse toResponse(Prescription prescription) {
 
         return new PrescriptionResponse(
                 prescription.getPrescriptionId(),

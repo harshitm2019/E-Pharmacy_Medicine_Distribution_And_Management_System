@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
+    private final OrderMapper orderMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -39,7 +42,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         OrderStatus.PENDING,
                         PrescriptionStatus.PENDING,
                         pageable)
-                .map(OrderMapper::toOrderResponse);
+                .map(orderMapper::toOrderResponse);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         orderId, OrderStatus.PENDING, PrescriptionStatus.PENDING)
                 .       orElseThrow(() -> new ResourceNotFoundException("Pending order not found."));
 
-        return OrderMapper.toOrderResponse(order);
+        return orderMapper.toOrderResponse(order);
 
     }
 
@@ -75,21 +78,19 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         if (prescription.getStatus() == PrescriptionStatus.APPROVED) {
 
-            Payment payment = paymentRepository.findByOrder(order)
-                            .orElseThrow(() ->
-                            new ResourceNotFoundException("Payment not found."));
+            Optional<Payment> paymentOptional = paymentRepository.findByOrder(order);
 
-            if (payment.getPaymentMethod() == PaymentMethod.COD) {
+
+            if (paymentOptional.isPresent()
+                    && paymentOptional.get().getPaymentMethod() == PaymentMethod.COD)
+
+                orderService.confirmOrder(orderId);
+            
+            else if (order.getPaymentStatus() == OrderPaymentStatus.PAID)
 
                 orderService.confirmOrder(orderId);
 
-            } else if (order.getPaymentStatus() == OrderPaymentStatus.PAID) {
-
-                orderService.confirmOrder(orderId);
-
-            }
         }
-
     }
 
     @Override

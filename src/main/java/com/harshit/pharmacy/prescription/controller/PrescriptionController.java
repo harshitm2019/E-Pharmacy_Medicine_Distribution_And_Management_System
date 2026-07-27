@@ -13,8 +13,10 @@ import com.harshit.pharmacy.prescription.service.PrescriptionService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +39,10 @@ public class PrescriptionController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<PrescriptionResponse>> uploadPrescription(
             @RequestPart("prescription") MultipartFile prescription,
-            @Valid @RequestPart("request") UploadPrescriptionRequest request) {
 
-        PrescriptionResponse response = prescriptionService.uploadPrescription(prescription, request);
+            @RequestParam("doctorName") String doctorName) {
+
+        PrescriptionResponse response = prescriptionService.uploadPrescription(prescription, new UploadPrescriptionRequest(doctorName));
 
         return ResponseEntity.status(CREATED).body(
                 ApiResponse.success(SuccessMessages.PRESCRIPTION_UPLOADED, response)
@@ -67,6 +70,7 @@ public class PrescriptionController {
     @GetMyPrescriptionsApi
     @GetMapping
     public ResponseEntity<ApiResponse<Page<PrescriptionResponse>>> getMyPrescriptions(
+            @ParameterObject
             @PageableDefault(sort = "uploadedDate")
             Pageable pageable) {
 
