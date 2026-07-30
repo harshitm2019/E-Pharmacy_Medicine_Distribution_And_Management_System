@@ -75,6 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         Payment savedPayment = paymentRepository.save(payment);
+        orderRepository.save(order);
         return PaymentMapper.toPaymentResponse(savedPayment);
 
 
@@ -107,6 +108,9 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaidDate(LocalDateTime.now());
 
         order.setPaymentStatus(OrderPaymentStatus.PAID);
+
+        paymentRepository.save(payment);
+        orderRepository.save(order);
 
     }
 
@@ -159,6 +163,8 @@ public class PaymentServiceImpl implements PaymentService {
             payment.setPaymentMethod(newPaymentMethod);
             payment.setPaymentStatus(PaymentStatus.PENDING);
             payment.setPaidDate(null);
+            paymentRepository.save(payment);
+
 
         } else {
 
@@ -167,12 +173,14 @@ public class PaymentServiceImpl implements PaymentService {
 
         }
 
+
         if (newPaymentMethod != PaymentMethod.COD)
             return false;
 
 
         if (order.getPrescription() == null)
             return true;
+
 
 
         return order.getPrescription().getStatus() == PrescriptionStatus.APPROVED;

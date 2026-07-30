@@ -69,7 +69,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
         if (prescription.getStatus() != PrescriptionStatus.PENDING &&
                 prescription.getStatus() != PrescriptionStatus.REJECTED) {
-            throw new BadRequestException(ErrorMessages.CANNOT_MODIFY_REVIEWED_PRESCRIPTION);
+            throw new BadRequestException(ErrorMessages.CANNOT_MODIFY_APPROVED_PRESCRIPTION);
         }
 
         fileValidator.validatePrescription(file);

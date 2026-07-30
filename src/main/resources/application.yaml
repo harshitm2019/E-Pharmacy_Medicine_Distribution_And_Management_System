@@ -12,6 +12,25 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.gmail.com
+
+
+  data:
+    web:
+      pageable:
+        serialization-mode: via-dto
+
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -42,3 +61,7 @@ cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
+
+pharmacy:
+  admin:
+    email: ${ADMIN_EMAIL1}

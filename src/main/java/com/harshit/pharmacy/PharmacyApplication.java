@@ -7,8 +7,10 @@ import com.harshit.pharmacy.security.config.JwtConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 @EnableConfigurationProperties({JwtConfigProperties.class, AdminProperties.class,
                                 CloudinaryProperties.class, FileProperties.class})
 public class PharmacyApplication {

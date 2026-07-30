@@ -1,11 +1,6 @@
 package com.harshit.pharmacy.common.constants;
 
-
-
 public final class ErrorMessages {
-
-
-
 
     private ErrorMessages() {}
 
@@ -36,7 +31,7 @@ public final class ErrorMessages {
 
     public static final String UNABLE_TO_UPLOAD_PRESCRIPTION = "Unable to upload prescription.";
     public static final String UNABLE_TO_DELETE_PRESCRIPTION = "Unable to delete prescription.";
-    public static final String CANNOT_MODIFY_REVIEWED_PRESCRIPTION = "Cannot modify prescription.";
+    public static final String CANNOT_MODIFY_APPROVED_PRESCRIPTION = "Cannot modify prescription approved prescription";
     public static final String PRESCRIPTION_NOT_FOUND = "Prescription not found.";
     public static final String ACCESS_DENIED = "You do not have permission to access this resource.";
     public static final String UNABLE_TO_REPLACE_PRESCRIPTION = "Unable to replace prescription.";
@@ -60,7 +55,6 @@ public final class ErrorMessages {
 
 
     // Authentication / authorization
-    public static final String INVALID_USERNAME_OR_PASSWORD = "Invalid username or password";
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
     public static final String AUTHENTICATION_REQUIRED = "Authentication required to access this resource";
     public static final String ACCOUNT_DISABLED = "Account disabled";

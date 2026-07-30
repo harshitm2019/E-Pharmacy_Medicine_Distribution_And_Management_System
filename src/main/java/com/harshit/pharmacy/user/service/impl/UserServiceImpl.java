@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AdminUserResponse> getAllUsers(Pageable pageable) {
 
         return userRepository.findAll(pageable).map(userMapper::toAdminUserResponse);
@@ -62,6 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AdminUserResponse> searchUsers(String email, Pageable pageable) {
 
         return userRepository.findByEmailContainingIgnoreCase(email, pageable).map(userMapper::toAdminUserResponse);
@@ -72,8 +74,8 @@ public class UserServiceImpl implements UserService {
     public AdminUserResponse updateUserStatus(Integer userId, UserStatusRequest request) {
 
         User user = userRepository.findById(userId)
-                                  .orElseThrow(() ->
-                                  new ResourceNotFoundException(ErrorMessages.USER_DOES_NOT_EXIST));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(ErrorMessages.USER_DOES_NOT_EXIST));
 
         user.setStatus(UserStatus.valueOf(request.status()));
 
@@ -119,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
         duplicateValidator.validate(
 
-               userRepository.existsByEmailAndUserIdNot(request.newEmail(),user.getUserId()),
+                userRepository.existsByEmailAndUserIdNot(request.newEmail(),user.getUserId()),
                 FieldNames.EMAIL
 
         );
@@ -158,6 +160,5 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException(ErrorMessages.USER_DOES_NOT_EXIST));
     }
-
 
 }

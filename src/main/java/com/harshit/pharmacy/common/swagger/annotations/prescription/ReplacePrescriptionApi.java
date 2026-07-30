@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 )
 @ApiResponses({
         @ApiResponse(responseCode = SwaggerResponses.OK, description = SuccessMessages.PRESCRIPTION_REPLACED),
-        @ApiResponse(responseCode = SwaggerResponses.BAD_REQUEST, description = ErrorMessages.CANNOT_MODIFY_REVIEWED_PRESCRIPTION),
+        @ApiResponse(responseCode = SwaggerResponses.BAD_REQUEST, description = ErrorMessages.CANNOT_MODIFY_APPROVED_PRESCRIPTION),
         @ApiResponse(responseCode = SwaggerResponses.UNAUTHORIZED, description = SwaggerResponses.UNAUTHORIZED_DESC),
         @ApiResponse(responseCode = SwaggerResponses.FORBIDDEN, description = SwaggerResponses.ACCESS_DENIED),
         @ApiResponse(responseCode = SwaggerResponses.NOT_FOUND, description = ErrorMessages.PRESCRIPTION_NOT_FOUND)

@@ -49,9 +49,7 @@ public class CheckoutValidator {
         }
 
         if (prescriptionId == null) {
-            throw new BadRequestException(
-                    "Prescription is required."
-            );
+            throw new BadRequestException("Prescription is required.");
         }
 
         Prescription prescription = prescriptionRepository
@@ -59,14 +57,10 @@ public class CheckoutValidator {
                         prescriptionId,
                         user
                 )
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Prescription not found."
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Prescription not found."));
 
         if (prescription.getStatus() == PrescriptionStatus.REJECTED) {
-            throw new BadRequestException(
-                    "Prescription has been rejected."
-            );
+            throw new BadRequestException("Prescription has been rejected.");
         }
 
         return prescription;
@@ -79,26 +73,15 @@ public class CheckoutValidator {
     ) {
 
         if (cartItems.size() != medicines.size()) {
-            throw new ResourceNotFoundException(
-                    "One or more medicines not found."
-            );
+
+            throw new ResourceNotFoundException("One or more medicines not found.");
         }
 
         Map<Integer, Medicine> medicineMap = new HashMap<>();
 
         for (Medicine medicine : medicines) {
 
-            if (medicine.getStatus() != MedicineStatus.ACTIVE) {
-                throw new BadRequestException(
-                        medicine.getMedicineName() + " is inactive."
-                );
-            }
-
-            if (!medicine.getExpiryDate().isAfter(LocalDate.now())) {
-                throw new BadRequestException(
-                        medicine.getMedicineName() + " has expired."
-                );
-            }
+            validateMedicineIsActiveAndIsExpired(medicine);
 
             medicineMap.put(
                     medicine.getMedicineId(),
@@ -125,8 +108,19 @@ public class CheckoutValidator {
         }
 
         return medicineMap;
-
     }
 
+    public void validateMedicineIsActiveAndIsExpired(Medicine medicine) {
+
+        if (medicine.getStatus() != MedicineStatus.ACTIVE) {
+
+            throw new BadRequestException(medicine.getMedicineName() + " is inactive.");
+        }
+
+        if (!medicine.getExpiryDate().isAfter(LocalDate.now())) {
+
+            throw new BadRequestException(medicine.getMedicineName() + " has expired.");
+        }
+    }
 
 }

@@ -61,11 +61,11 @@ public class Medicine {
     private String description;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "prescription_need", nullable = false)
+    @Column(name = "prescription_need", nullable = false,columnDefinition = "prescription_need_enum")
     private PrescriptionNeed prescriptionNeed;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "medicine_status_enum")
     private MedicineStatus status;
 
     @Column(name = "med_img")

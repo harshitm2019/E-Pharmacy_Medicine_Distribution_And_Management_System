@@ -43,14 +43,14 @@ public class Order {
     private Prescription prescription;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "order_status", nullable = false)
+    @Column(name = "order_status", nullable = false,columnDefinition = "order_status_enum")
     private OrderStatus orderStatus;
 
     @Column(name = "shipping_address", nullable = false, length = 200)
     private String shippingAddress;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "payment_status", nullable = false)
+    @Column(name = "payment_status", nullable = false,columnDefinition = "order_payment_status_enum")
     private OrderPaymentStatus paymentStatus;
 
     @OneToMany(

@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -42,13 +41,13 @@ public class MedicineServiceImpl implements MedicineService {
 
         validateDates(request.manufactureDate(), request.expiryDate());
 
+        validateActiveMedicineForCreate(request);
+
         return MedicineMapper.toResponse(
                 medicineRepository.save(
                         MedicineMapper.toEntity(request, category)
                 )
         );
-
-
     }
 
     @Override
@@ -69,7 +68,6 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public MedicineResponse getMedicineById(Integer medicineId) {
@@ -78,14 +76,14 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
-
     @Override
     @Transactional(readOnly = true)
-    public Page<MedicineResponse> getAllActiveMedicines(Pageable pageable) {
+    public Page<MedicineResponse> getAllActiveMedicinesByCategory(Integer categoryId, Pageable pageable){
 
-        return medicineRepository.findByStatus(MedicineStatus.ACTIVE, pageable)
-                .map(MedicineMapper::toResponse);
-
+        return medicineRepository.findByStatusAndCategoryCategoryId(
+                                     MedicineStatus.ACTIVE,
+                                     categoryId,
+                                     pageable).map(MedicineMapper::toResponse);
     }
 
     @Override
@@ -97,7 +95,6 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
-
     @Override
     public List<MedicineResponse> updateStatus(MedicineStatusRequest request) {
 
@@ -106,41 +103,21 @@ public class MedicineServiceImpl implements MedicineService {
         if (medicines.size() != request.medicineIds().size())
             throw new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST);
 
+        MedicineStatus status = MedicineStatus.valueOf(request.status());
+
+        if (status == MedicineStatus.ACTIVE)
+            validateActiveMedicine(medicines);
+
         medicines.forEach(medicine -> medicine.setStatus(MedicineStatus.valueOf(request.status())));
 
         return medicineRepository.saveAll(medicines)
                 .stream()
                 .map(MedicineMapper::toResponse)
                 .toList();
-
-
     }
 
     @Override
     @Transactional(readOnly = true)
-    public MedicineResponse getActiveMedicineById(Integer medicineId) {
-
-        return MedicineMapper.toResponse(
-
-                medicineRepository.findByMedicineIdAndStatus(
-                        medicineId,
-                        MedicineStatus.ACTIVE
-                ).orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST))
-
-        );
-
-    }
-
-    private Medicine getMedicine(Integer medicineId) {
-
-        return medicineRepository.findById(medicineId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST));
-
-    }
-
-
-    @Override
     public Page<MedicineResponse> searchActiveMedicines(String keyword, Pageable pageable) {
 
         return medicineRepository
@@ -154,13 +131,22 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<MedicineResponse> searchMedicines(String keyword, Pageable pageable) {
 
         return medicineRepository.findByMedicineNameContainingIgnoreCase(
 
-                 keyword.trim(),
-                 pageable)
+                        keyword.trim(),
+                        pageable)
                 .map(MedicineMapper::toResponse);
+
+    }
+
+    private Medicine getMedicine(Integer medicineId) {
+
+        return medicineRepository.findById(medicineId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(ErrorMessages.MEDICINE_DOES_NOT_EXIST));
 
     }
 
@@ -186,11 +172,10 @@ public class MedicineServiceImpl implements MedicineService {
         medicineRepository.findByBatchNumberIgnoreCase(batchNumber.trim())
                 .ifPresent(existingMedicine -> {
 
-                        duplicateValidator.validate(!existingMedicine.getMedicineId().equals(medicine.getMedicineId()),
-                                FieldNames.BATCH_NUMBER);
+                    duplicateValidator.validate(!existingMedicine.getMedicineId().equals(medicine.getMedicineId()),
+                            FieldNames.BATCH_NUMBER);
 
                 });
-
     }
 
     private void validateDates(LocalDate manufactureDate, LocalDate expiryDate) {
@@ -200,5 +185,33 @@ public class MedicineServiceImpl implements MedicineService {
 
     }
 
+    private void validateActiveMedicineForCreate(MedicineRequest request) {
 
-}
+        if (medicineRepository.existsByMedicineNameIgnoreCaseAndStatus(
+                        request.medicineName().trim(),
+                        MedicineStatus.ACTIVE)
+        ) {
+
+            throw new BusinessException("An active batch already exists for this medicine.");
+
+        }
+    }
+
+    private void validateActiveMedicine(List<Medicine> medicines) {
+
+        for (Medicine medicine : medicines) {
+
+            if (medicineRepository.existsByMedicineNameIgnoreCaseAndStatusAndMedicineIdNot(
+                    medicine.getMedicineName(),
+                    MedicineStatus.ACTIVE,
+                    medicine.getMedicineId())) {
+
+                throw new BusinessException("An active batch already exists for medicine: "
+                                + medicine.getMedicineName());
+            }
+        }
+    }
+
+
+    }
+

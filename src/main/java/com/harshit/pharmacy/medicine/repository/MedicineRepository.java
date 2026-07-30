@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,15 @@ public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
 
     boolean existsByCategoryCategoryId(Integer categoryId);
 
-    Optional<Medicine> findByMedicineIdAndStatus(Integer medicineId, MedicineStatus status);
-
     Page<Medicine> findByMedicineNameContainingIgnoreCase(String keyword, Pageable pageable);
 
     List<Medicine> findByMedicineIdIn(Collection<Integer> medicineIds);
+
+    Page<Medicine> findByStatusAndCategoryCategoryId(
+            MedicineStatus status,
+            Integer categoryId,
+            Pageable pageable
+    );
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
@@ -42,5 +47,22 @@ public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
           WHERE m.medicineId IN :medicineIds
           """)
     List<Medicine> findAllForUpdate(@Param("medicineIds") Collection<Integer> medicineIds);
+
+    boolean existsByMedicineNameIgnoreCaseAndStatus(
+            String medicineName,
+            MedicineStatus status
+    );
+
+    boolean existsByMedicineNameIgnoreCaseAndStatusAndMedicineIdNot(
+            String medicineName,
+            MedicineStatus status,
+            Integer medicineId
+    );
+
+    List<Medicine> findByStatusAndExpiryDateBetweenOrderByExpiryDateAsc(
+            MedicineStatus status,
+            LocalDate today,
+            LocalDate reminderDate
+    );
 
 }

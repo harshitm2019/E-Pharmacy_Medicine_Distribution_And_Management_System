@@ -15,6 +15,7 @@ import com.harshit.pharmacy.payment.enums.PaymentMethod;
 import com.harshit.pharmacy.payment.repository.PaymentRepository;
 import com.harshit.pharmacy.prescription.entity.Prescription;
 import com.harshit.pharmacy.prescription.enums.PrescriptionStatus;
+import com.harshit.pharmacy.prescription.repository.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
+    private final PrescriptionRepository prescriptionRepository;
     private final OrderService orderService;
     private final OrderMapper orderMapper;
 
@@ -41,8 +43,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         return orderRepository.findByOrderStatusAndPrescriptionStatus(
                         OrderStatus.PENDING,
                         PrescriptionStatus.PENDING,
-                        pageable)
-                .map(orderMapper::toOrderResponse);
+                        pageable).map(orderMapper::toOrderResponse);
     }
 
     @Override
@@ -60,9 +61,8 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     public void updatePrescriptionStatus(Integer orderId, String status) {
 
-
         Order order = orderRepository.findByOrderIdAndOrderStatus(orderId, OrderStatus.PENDING)
-                     .orElseThrow(() ->
+                        .orElseThrow(() ->
                         new ResourceNotFoundException("Pending order not found."));
 
         Prescription prescription = order.getPrescription();
@@ -70,16 +70,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if (prescription == null)
             throw new BadRequestException("No prescription found.");
 
-        if (prescription.getStatus() != PrescriptionStatus.PENDING) {
+        if (prescription.getStatus() != PrescriptionStatus.PENDING)
             throw new BadRequestException("Prescription has already been processed.");
-        }
 
         prescription.setStatus(PrescriptionStatus.valueOf(status));
+
+        prescriptionRepository.save(prescription);
 
         if (prescription.getStatus() == PrescriptionStatus.APPROVED) {
 
             Optional<Payment> paymentOptional = paymentRepository.findByOrder(order);
-
 
             if (paymentOptional.isPresent()
                     && paymentOptional.get().getPaymentMethod() == PaymentMethod.COD)
@@ -91,6 +91,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                 orderService.confirmOrder(orderId);
 
         }
+
     }
 
     @Override
@@ -103,7 +104,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         validateOrderStatusTransition(order.getOrderStatus(), newStatus);
 
-        order.setOrderStatus(OrderStatus.valueOf(status));
+        order.setOrderStatus(newStatus);
+
+        orderRepository.save(order);
 
     }
 
@@ -128,16 +131,6 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             }
             case CONFIRMED -> {
                 if (next != OrderStatus.PACKED) {
-                    throw new BadRequestException("Invalid order status transition.");
-                }
-            }
-            case PACKED -> {
-                if (next != OrderStatus.OUT_FOR_DELIVERY) {
-                    throw new BadRequestException("Invalid order status transition.");
-                }
-            }
-            case OUT_FOR_DELIVERY -> {
-                if (next != OrderStatus.DELIVERED) {
                     throw new BadRequestException("Invalid order status transition.");
                 }
             }

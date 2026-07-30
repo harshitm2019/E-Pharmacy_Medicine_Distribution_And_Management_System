@@ -21,7 +21,6 @@ public final class SuccessMessages {
     public static final String USER_CREATED = "User created successfully";
     public static final String USER_FETCHED_SUCCESSFULLY = "User fetched successfully";
     public static final String USER_STATUS_UPDATED = "User status updated successfully.";
-    public static final String USER_UPDATED_SUCCESSFULLY = "User updated successfully";
     public static final String PASSWORD_CHANGED = "Password changed successfully";
     public static final String EMAIL_CHANGED = "Email changed successfully";
     public static final String USER_PROFILE_UPDATED_SUCCESSFULLY = "User profile updated successfully";
@@ -41,5 +40,13 @@ public final class SuccessMessages {
     public static final String ORDERS_FETCHED_SUCCESSFULLY = "Orders fetched successfully.";
     public static final String ORDER_CANCELLED_SUCCESSFULLY = "Order cancelled successfully.";
     public static final String ORDER_UPDATED_SUCCESSFULLY = "Order updated successfully.";
+    public static final String DELIVERY_BOY_CREATED = "Delivery boy created successfully";
+    public static final String DELIVERY_BOY_UPDATED = "Delivery boy updated successfully";
+    public static final String DELIVERY_BOY_FETCHED = "Delivery boy fetched successfully";
+    public static final String DELIVERY_BOYS_FETCHED = "Delivery boys fetched successfully";
+    public static final String AVAILABLE_DELIVERY_BOYS_FETCHED = "Available delivery boys fetched successfully";
+    public static final String DELIVERY_BOY_ASSIGNED = "Delivery boy assigned successfully";
+    public static final String DELIVERY_STATUS_UPDATED = "Delivery status updated successfully";
+    public static final String DELIVERY_STATUS_FETCHED = "Delivery status fetched successfully";
 
 }

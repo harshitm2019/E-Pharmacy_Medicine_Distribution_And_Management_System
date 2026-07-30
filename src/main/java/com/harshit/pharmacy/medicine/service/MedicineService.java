@@ -17,13 +17,11 @@ public interface MedicineService {
 
     MedicineResponse getMedicineById(Integer medicineId);
 
-    Page<MedicineResponse> getAllActiveMedicines(Pageable pageable);
+    Page<MedicineResponse> getAllActiveMedicinesByCategory(Integer categoryId,Pageable pageable);
 
     Page<MedicineResponse> getAllMedicines(Pageable pageable);
 
     List<MedicineResponse> updateStatus(MedicineStatusRequest request);
-
-    MedicineResponse getActiveMedicineById(Integer medicineId);
 
     Page<MedicineResponse> searchActiveMedicines(String keyword, Pageable pageable);
 

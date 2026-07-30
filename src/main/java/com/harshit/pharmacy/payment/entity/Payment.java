@@ -33,14 +33,14 @@ public class Payment {
     private Order order;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "pay_method", nullable = false)
+    @Column(name = "pay_method", nullable = false,columnDefinition = "pay_method_enum")
     private PaymentMethod paymentMethod;
 
     @Column(name = "amt", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "pay_status", nullable = false)
+    @Column(name = "pay_status", nullable = false,columnDefinition = "payment_status_enum")
     private PaymentStatus paymentStatus;
 
     @Column(name = "paid_date")

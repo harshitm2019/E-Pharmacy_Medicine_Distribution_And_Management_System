@@ -45,7 +45,7 @@ public class Prescription {
     private LocalDateTime uploadedDate;
 
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false,columnDefinition = "prescription_status_enum")
     private PrescriptionStatus status;
 
 

@@ -7,8 +7,8 @@ public record OrderStatusUpdateRequest(
 
         @NotBlank(message = "Order status is required.")
         @Pattern(
-                regexp = "CONFIRMED|PACKED|OUT_FOR_DELIVERY|DELIVERED",
-                message = "Order status must be one of: CONFIRMED, PACKED, OUT_FOR_DELIVERY, DELIVERED.")
+                regexp = "CONFIRMED|PACKED",
+                message = "Order status must be one of: CONFIRMED, PACKED")
         String orderStatus
 
 ) {

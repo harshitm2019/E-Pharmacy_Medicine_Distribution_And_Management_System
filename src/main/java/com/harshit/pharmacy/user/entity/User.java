@@ -38,12 +38,12 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false)
+    @Column(name = "role",nullable = false,columnDefinition = "user_role_enum")
     private UserRole role;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false)
+    @Column(name = "status",nullable = false,columnDefinition = "user_status_enum")
     private UserStatus status;
 
 

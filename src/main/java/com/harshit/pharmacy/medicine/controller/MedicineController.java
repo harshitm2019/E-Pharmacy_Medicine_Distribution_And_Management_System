@@ -30,32 +30,19 @@ public class MedicineController {
     private final MedicineService medicineService;
 
     @GetAllActiveMedicines
-    @GetMapping
-    public ResponseEntity<ApiResponse<Page<MedicineResponse>>> getAllMedicines(
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ApiResponse<Page<MedicineResponse>>> getAllActiveMedicinesByCategory(
+            @PathVariable Integer categoryId,
             @ParameterObject Pageable pageable) {
 
-        Page<MedicineResponse> medicineResponse = medicineService.getAllActiveMedicines(pageable);
+        Page<MedicineResponse> medicineResponse =
+                medicineService.getAllActiveMedicinesByCategory(categoryId,pageable);
 
         return ResponseEntity.status(HttpStatus.OK).body(
 
                 ApiResponse.success(SuccessMessages.ALL_MEDICINES_FETCHED,medicineResponse)
 
         );
-
-    }
-
-    @GetActiveMedicineById
-    @GetMapping("/{medicineId}")
-    public ResponseEntity<ApiResponse<MedicineResponse>> getMedicineById(@PathVariable Integer medicineId) {
-
-        MedicineResponse medicineResponse = medicineService.getActiveMedicineById(medicineId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-
-                ApiResponse.success(SuccessMessages.MEDICINE_FETCHED, medicineResponse)
-
-        );
-
     }
 
     @SearchActiveMedicines
@@ -71,7 +58,5 @@ public class MedicineController {
         );
 
     }
-
-
 
 }

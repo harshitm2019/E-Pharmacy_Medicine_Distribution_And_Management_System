@@ -8,6 +8,7 @@ import com.harshit.pharmacy.medicine.repository.MedicineRepository;
 import com.harshit.pharmacy.order.dto.*;
 import com.harshit.pharmacy.order.entity.Order;
 import com.harshit.pharmacy.order.entity.OrderItem;
+import com.harshit.pharmacy.order.enums.OrderPaymentStatus;
 import com.harshit.pharmacy.order.enums.OrderStatus;
 import com.harshit.pharmacy.order.mapper.OrderMapper;
 import com.harshit.pharmacy.order.repository.OrderRepository;
@@ -155,6 +156,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setOrderStatus(OrderStatus.CANCELLED);
+
+        orderRepository.save(order);
     }
 
     @Override
@@ -180,13 +183,17 @@ public class OrderServiceImpl implements OrderService {
             if (medicine == null)
                 throw new ResourceNotFoundException("Medicine not found : " + item.getMedicine().getMedicineId());
 
+            validator.validateMedicineIsActiveAndIsExpired(medicine);
+
             if (medicine.getStockQuantity() < item.getQuantity())
                 throw new BadRequestException("Insufficient stock for " + medicine.getMedicineName());
 
             medicine.setStockQuantity(medicine.getStockQuantity() - item.getQuantity());
         }
 
+        medicineRepository.saveAll(medicines);
         order.setOrderStatus(OrderStatus.CONFIRMED);
+        orderRepository.save(order);
 
     }
 
@@ -212,6 +219,11 @@ public class OrderServiceImpl implements OrderService {
 
             if (StringUtils.hasText(request.paymentMethod())) {
                 ensureOrderIsPending(status, "Payment method can only be updated while the order is pending.");
+
+                if (order.getPaymentStatus() == OrderPaymentStatus.PAID) {
+                    throw new BadRequestException("Payment method cannot be changed after successful payment.");
+                }
+
                   if(paymentService.updatePaymentMethod(order, request.paymentMethod()))
                       confirmOrder(orderId);
             }
@@ -227,6 +239,8 @@ public class OrderServiceImpl implements OrderService {
                     prescriptionFile
             );
         }
+
+        orderRepository.save(order);
     }
 
     private void ensureOrderIsPending(OrderStatus current, String errorMessage) {
@@ -300,6 +314,8 @@ public class OrderServiceImpl implements OrderService {
             medicine.setStockQuantity(medicine.getStockQuantity() + item.getQuantity());
 
         }
+
+        medicineRepository.saveAll(medicines);
 
     }
 
