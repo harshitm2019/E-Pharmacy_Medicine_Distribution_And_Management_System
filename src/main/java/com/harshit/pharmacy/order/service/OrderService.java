@@ -26,6 +26,8 @@ public interface OrderService {
 
     void processOrderCancellation(Order order);
 
+    void processReturnedOrder(Order order);
+
 
 
 

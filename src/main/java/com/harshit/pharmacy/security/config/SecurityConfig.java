@@ -132,6 +132,19 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/delivery/orders/*/status")
                         .hasRole("DELIVERY_BOY")
 
+
+                        // ==========================
+                        // RETURN APIs
+                        // ==========================
+
+                        // Customer - Create Return
+                        .requestMatchers(HttpMethod.POST, "/api/v1/returns")
+                        .hasRole("CUSTOMER")
+
+                        // Customer - View My Returns
+                        .requestMatchers(HttpMethod.GET, "/api/v1/returns")
+                        .hasRole("CUSTOMER")
+
                         // ==========================
                         // USER APIs
                         // ==========================

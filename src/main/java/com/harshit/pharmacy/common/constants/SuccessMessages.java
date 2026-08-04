@@ -48,5 +48,9 @@ public final class SuccessMessages {
     public static final String DELIVERY_BOY_ASSIGNED = "Delivery boy assigned successfully";
     public static final String DELIVERY_STATUS_UPDATED = "Delivery status updated successfully";
     public static final String DELIVERY_STATUS_FETCHED = "Delivery status fetched successfully";
+    public static final String RETURN_SUBMITTED = "Return request submitted successfully";
+    public static final String RETURNS_FETCHED = "Returns fetched successfully";
+    public static final String RETURNS_FETCHED_BY_STATUS = "Returns fetched successfully";
+    public static final String RETURN_STATUS_UPDATED = "Return status updated successfully";
 
 }

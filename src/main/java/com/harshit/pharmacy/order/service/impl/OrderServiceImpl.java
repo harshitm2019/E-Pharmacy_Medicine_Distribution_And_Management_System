@@ -161,6 +161,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void processReturnedOrder(Order order) {
+
+        restoreStock(order);
+
+    }
+
+    @Override
     public void confirmOrder(Integer orderId) {
 
         Order order = orderRepository.findById(orderId)
@@ -299,7 +306,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public void restoreStock(Order order) {
+    private void restoreStock(Order order) {
 
         List<Integer> medicineIds = getMedicineIds(order);
 
