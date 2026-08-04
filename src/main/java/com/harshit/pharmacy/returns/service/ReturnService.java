@@ -13,7 +13,6 @@ public interface ReturnService {
 
     Page<ReturnResponse> getMyReturns(Pageable pageable);
 
-    @Transactional(readOnly = true)
     Page<ReturnResponse> getReturnsByStatus(String status, Pageable pageable);
 
     ReturnResponse updateReturnStatus(Integer returnId, UpdateReturnStatusRequest request);
