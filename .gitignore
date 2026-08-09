@@ -1,0 +1,3 @@
+# Explicitly re-ignore sensitive/generated files even inside allowed folders
+.idea/
+.mvn/
