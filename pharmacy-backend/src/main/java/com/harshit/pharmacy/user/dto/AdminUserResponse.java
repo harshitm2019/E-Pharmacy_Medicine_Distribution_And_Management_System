@@ -5,13 +5,9 @@ import com.harshit.pharmacy.user.enums.UserStatus;
 
 public record AdminUserResponse(
 
-
         Integer userId,
         String email,
         UserRole role,
         UserStatus status
-
-
-
 ) {
 }

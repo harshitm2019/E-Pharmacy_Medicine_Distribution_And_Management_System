@@ -35,17 +35,14 @@ public class SecurityConfig {
                 new DaoAuthenticationProvider(customUserDetailsService);
 
         provider.setPasswordEncoder(passwordEncoder);
-
         return provider;
     }
-
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -55,19 +52,11 @@ public class SecurityConfig {
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-
                 .authenticationProvider(authenticationProvider())
-
-                .addFilterBefore(
-                        jwtFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                )
-
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-
                         // Public APIs
                         .requestMatchers(
                                 "/v3/api-docs/**",
@@ -76,7 +65,6 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/api/v1/medicines/**"
                         ).permitAll()
-
                         // ==========================
                         // ADMIN APIs
                         // ==========================
@@ -92,7 +80,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/**")
                         .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/*")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/*/update")
                         .hasRole("CUSTOMER")
 
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/*/cancel")
@@ -125,15 +113,17 @@ public class SecurityConfig {
                         // ==========================
                         // DELIVERY APIs
                         // ==========================
-
-                        // Customer - Track Delivery
                         .requestMatchers(HttpMethod.GET, "/api/v1/delivery/orders/*/track")
                         .hasRole("CUSTOMER")
 
-                        // Delivery Boy - Update Delivery Status
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/delivery/orders/*/status")
                         .hasRole("DELIVERY_BOY")
 
+                        .requestMatchers(HttpMethod.GET, "/api/v1/delivery/my-orders")
+                        .hasRole("DELIVERY_BOY")
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/delivery/orders/*")
+                        .hasRole("DELIVERY_BOY")
 
                         // ==========================
                         // RETURN APIs
@@ -153,18 +143,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/dashboard/admin")
                         .hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.GET, "/api/v1/dashboard/customer")
+                        .hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/v1/dashboard/delivery-boy")
+                        .hasRole("DELIVERY_BOY")
+
                         // ==========================
                         // USER APIs
                         // ==========================
                         .requestMatchers("/api/v1/users/**")
                         .hasAnyRole("ADMIN", "CUSTOMER", "DELIVERY_BOY")
-
                         // Everything else
                         .anyRequest()
                         .authenticated()
                 );
-
         return http.build();
     }
-
 }

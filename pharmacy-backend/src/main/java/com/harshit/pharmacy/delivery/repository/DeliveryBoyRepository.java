@@ -52,6 +52,4 @@ public interface DeliveryBoyRepository extends JpaRepository<DeliveryBoy, Intege
             @Param("deliveryBoyId") Integer deliveryBoyId,
             @Param("status") DeliveryBoyStatus status
     );
-
-
 }

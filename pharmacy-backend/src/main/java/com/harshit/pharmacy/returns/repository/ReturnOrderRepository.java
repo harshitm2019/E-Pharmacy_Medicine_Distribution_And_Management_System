@@ -29,4 +29,6 @@ public interface ReturnOrderRepository extends JpaRepository<ReturnOrder, Intege
     """)
     Optional<ReturnOrder> findByIdForUpdate(Integer returnId);
 
+    long countByOrderUser(User user);
+
 }

@@ -16,7 +16,6 @@ public class UserValidator {
 
     public void validateRegistration(String email, String phone) {
 
-
         duplicateValidator.validate(
                 userRepository.existsByEmail(email),
                 FieldNames.EMAIL

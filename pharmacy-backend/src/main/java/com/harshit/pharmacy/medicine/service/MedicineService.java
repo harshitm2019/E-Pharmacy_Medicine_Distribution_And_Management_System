@@ -16,8 +16,6 @@ public interface MedicineService {
 
     MedicineResponse updateMedicine(Integer medicineId, MedicineRequest request);
 
-    MedicineResponse getMedicineById(Integer medicineId);
-
     Page<MedicineResponse> getAllActiveMedicinesByCategory(Integer categoryId,Pageable pageable);
 
     Page<MedicineResponse> getAllMedicines(Pageable pageable);

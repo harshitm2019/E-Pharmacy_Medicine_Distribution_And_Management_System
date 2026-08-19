@@ -48,17 +48,6 @@ public class AdminDeliveryController {
         );
     }
 
-    @GetMapping("/delivery-boys/{deliveryBoyId}")
-    public ResponseEntity<ApiResponse<DeliveryBoyResponse>> getDeliveryBoyById(
-            @PathVariable Integer deliveryBoyId) {
-
-        DeliveryBoyResponse response = deliveryService.getDeliveryBoyById(deliveryBoyId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.success(SuccessMessages.DELIVERY_BOY_FETCHED, response)
-        );
-    }
-
     @GetMapping("/delivery-boys")
     public ResponseEntity<ApiResponse<Page<DeliveryBoyResponse>>> getAllDeliveryBoys(
             @ParameterObject
@@ -93,4 +82,25 @@ public class AdminDeliveryController {
                 ApiResponse.success(SuccessMessages.DELIVERY_BOY_ASSIGNED, response)
         );
     }
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<ApiResponse<DeliveryStatusResponse>> getDeliveryStatus(
+            @PathVariable Integer orderId) {
+
+        DeliveryStatusResponse response = deliveryService.getDeliveryStatus(orderId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.success(SuccessMessages.DELIVERY_STATUS_FETCHED, response));
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<ApiResponse<Page<DeliveryStatusResponse>>> getDeliveryStatusByStatus(
+            @RequestParam String status,
+            @ParameterObject @PageableDefault(sort = "assignedDate") Pageable pageable) {
+
+        Page<DeliveryStatusResponse> response = deliveryService.getDeliveryStatusByStatus(status, pageable);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(SuccessMessages.DELIVERY_STATUS_FETCHED, response)
+        );
+    }
+
 }

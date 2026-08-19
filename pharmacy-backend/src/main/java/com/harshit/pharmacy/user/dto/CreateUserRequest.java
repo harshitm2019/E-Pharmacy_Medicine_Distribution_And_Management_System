@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 public record CreateUserRequest(
 
         @NotBlank(message = ErrorMessages.USERNAME_IS_REQUIRED)
@@ -44,7 +43,5 @@ public record CreateUserRequest(
         @NotBlank(message = ErrorMessages.ROLE_IS_REQUIRED)
         @Pattern(regexp = "^(ADMIN|DELIVERY_BOY)$", message = "Role must be ADMIN or DELIVERY_BOY.")
         String role
-
-
 ) {
 }

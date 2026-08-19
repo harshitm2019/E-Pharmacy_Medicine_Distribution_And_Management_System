@@ -21,4 +21,5 @@ public interface PaymentService {
 
     boolean updatePaymentMethod(Order order, String paymentMethod);
 
+    List<PaymentResponse> getAllPayments();
 }

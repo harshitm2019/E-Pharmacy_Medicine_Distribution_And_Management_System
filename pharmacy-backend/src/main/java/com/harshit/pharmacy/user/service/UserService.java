@@ -1,6 +1,12 @@
 package com.harshit.pharmacy.user.service;
 
-import com.harshit.pharmacy.user.dto.*;
+import com.harshit.pharmacy.user.dto.AdminUserResponse;
+import com.harshit.pharmacy.user.dto.ChangeEmailRequest;
+import com.harshit.pharmacy.user.dto.ChangePasswordRequest;
+import com.harshit.pharmacy.user.dto.CreateUserRequest;
+import com.harshit.pharmacy.user.dto.UserProfileRequest;
+import com.harshit.pharmacy.user.dto.UserProfileResponse;
+import com.harshit.pharmacy.user.dto.UserStatusRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,9 +14,7 @@ public interface UserService {
 
     AdminUserResponse createUser(CreateUserRequest request);
 
-    Page<AdminUserResponse> getAllUsers(Pageable pageable);
-
-    Page<AdminUserResponse> searchUsers(String email, Pageable pageable);
+    Page<AdminUserResponse> getUsers(String role, String email, Pageable pageable);
 
     AdminUserResponse updateUserStatus(Integer userId, UserStatusRequest request);
 

@@ -31,9 +31,7 @@ public class AuthMapper {
                 .build();
 
     }
-
     public UserProfile toUserProfile(RegisterRequest request, User user,LocalDateTime now) {
-
 
         return UserProfile.builder()
                 .user(user)
@@ -44,17 +42,13 @@ public class AuthMapper {
                 .build();
 
     }
-
     public RegisterResponse toRegisterResponse(User user) {
 
         return new RegisterResponse(
-
                 user.getUserId(),
                 user.getUsername()
-
         );
     }
-
     public LoginResponse toLoginResponse(User user,String accessToken) {
 
         return new LoginResponse(
@@ -63,7 +57,5 @@ public class AuthMapper {
                 user.getRole(),
                 accessToken
         );
-
     }
-
 }

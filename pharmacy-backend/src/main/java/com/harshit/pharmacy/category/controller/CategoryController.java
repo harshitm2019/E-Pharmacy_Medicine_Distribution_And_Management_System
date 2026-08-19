@@ -6,9 +6,6 @@ import com.harshit.pharmacy.category.dto.CategoryResponse;
 import com.harshit.pharmacy.category.service.CategoryService;
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
-import com.harshit.pharmacy.common.swagger.annotations.category.*;
-import com.harshit.pharmacy.common.swagger.constants.SwaggerConstants;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(
-        name = SwaggerConstants.CATEGORY_TAG,
-        description = "APIs for managing medicine categories."
-)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -28,7 +21,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @CreateCategoryApi
     @PostMapping("/admin/categories")
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
             @Valid @RequestBody CategoryRequest request) {
@@ -42,8 +34,6 @@ public class CategoryController {
         );
 
     }
-
-    @UpdateCategoryApi
     @PutMapping("/admin/categories/{categoryId}")
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(
             @PathVariable Integer categoryId,
@@ -57,7 +47,7 @@ public class CategoryController {
         );
     }
 
-    @DeleteCategoryApi
+
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(
             @PathVariable Integer categoryId) {
@@ -71,8 +61,6 @@ public class CategoryController {
        );
 
     }
-
-    @GetAllCategoriesApi
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories() {
 

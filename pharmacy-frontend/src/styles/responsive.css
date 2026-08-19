@@ -1,0 +1,238 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ================================
+   GLOBAL CONTAINER
+   ================================ */
+
+.MuiContainer-root {
+    max-width: 100% !important;
+}
+
+/* ================================
+   TABLES
+   ================================ */
+
+.MuiTableContainer-root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+}
+
+.MuiTable-root {
+    min-width: 650px;
+}
+
+/* ================================
+   DIALOG
+   ================================ */
+
+.MuiDialog-paper {
+    width: calc(100% - 32px);
+    margin: 16px;
+    max-width: 700px !important;
+}
+
+.MuiDialogContent-root {
+    overflow-x: hidden;
+}
+
+/* ================================
+   FORM CONTROLS
+   ================================ */
+
+.MuiTextField-root {
+    max-width: 100%;
+}
+
+.MuiFormControl-root {
+    max-width: 100%;
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+
+.MuiButton-root {
+    max-width: 100%;
+}
+
+/* ================================
+   <= 900px
+   ================================ */
+
+@media (max-width: 900px) {
+
+    .MuiDialog-paper {
+        width: calc(100% - 24px);
+        max-width: 650px !important;
+        margin: 12px;
+    }
+}
+
+/* ================================
+   <= 768px
+   ================================ */
+
+@media (max-width: 768px) {
+
+    .MuiDialog-paper {
+        width: calc(100% - 16px);
+        max-width: calc(100% - 16px) !important;
+        margin: 8px;
+    }
+
+    .MuiDialogContent-root {
+        padding: 16px !important;
+    }
+
+    .MuiDialogActions-root {
+        padding: 12px 16px !important;
+        gap: 8px;
+    }
+
+    .MuiTableCell-root {
+        white-space: nowrap;
+        padding: 10px 12px !important;
+    }
+
+    .MuiTablePagination-toolbar {
+        flex-wrap: wrap;
+        min-height: 72px !important;
+    }
+
+    .MuiTypography-h3 {
+        font-size: 1.6rem !important;
+    }
+
+    .MuiTypography-h4 {
+        font-size: 1.4rem !important;
+    }
+
+    .MuiTypography-h5 {
+        font-size: 1.2rem !important;
+    }
+
+    .MuiButton-root {
+        white-space: nowrap;
+    }
+}
+
+/* ================================
+   <= 600px
+   ================================ */
+
+@media (max-width: 600px) {
+
+    .MuiDialogTitle-root {
+        padding: 16px !important;
+        font-size: 1.15rem !important;
+    }
+
+    .MuiDialogContent-root {
+        padding: 12px !important;
+    }
+
+    .MuiDialogActions-root {
+        flex-wrap: wrap;
+    }
+
+    .MuiDialogActions-root .MuiButton-root {
+        flex: 1;
+    }
+
+    .MuiTablePagination-selectLabel,
+    .MuiTablePagination-displayedRows {
+        font-size: 0.75rem;
+    }
+}
+
+/* ================================
+   <= 480px
+   ================================ */
+
+@media (max-width: 480px) {
+
+    .MuiTable-root {
+        min-width: 600px;
+    }
+
+    .MuiTableCell-root {
+        padding: 8px 10px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .MuiIconButton-root {
+        padding: 8px;
+    }
+}
+
+/* ================================
+   PRINT
+   ================================ */
+
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #print-bill,
+    #print-bill * {
+        visibility: visible;
+    }
+
+    #print-bill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        background: white !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .MuiDialog-root {
+        position: static !important;
+    }
+
+    .MuiDialog-container {
+        display: block !important;
+    }
+
+    .MuiDialog-paper {
+        box-shadow: none !important;
+        margin: 0 !important;
+        max-width: none !important;
+        width: 100% !important;
+    }
+
+    .MuiDialogContent-root {
+        overflow: visible !important;
+        padding: 0 !important;
+    }
+}

@@ -19,3 +19,15 @@ export async function cancelOrder(orderId) {
     const response = await api.patch(`/admin/orders/${orderId}/cancel`);
     return response.data;
 }
+
+export async function getOrderById(orderId) {
+    const response = await api.get(`/admin/orders/${orderId}`);
+    return response.data;
+}
+
+export async function getOrderReport({ startDate, endDate, page, size }) {
+    const response = await api.get("/admin/orders/report", {
+        params: { startDate, endDate, page, size }
+    });
+    return response.data;
+}

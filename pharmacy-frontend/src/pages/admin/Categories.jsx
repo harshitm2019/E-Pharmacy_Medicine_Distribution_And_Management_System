@@ -7,10 +7,10 @@ import CategoryForm from "../../components/admin/category/CategoryForm";
 import CategoryTable from "../../components/admin/category/CategoryTable";
 import DeleteCategoryDialog from "../../components/admin/category/DeleteCategoryDialog";
 import useCategories from "../../hooks/useCategories";
-import useCreateCategory from "../../hooks/useCreateCategory";
-import useDeleteCategory from "../../hooks/useDeleteCategory";
+import useCreateCategory from "../../hooks/admin/useCreateCategory";
+import useDeleteCategory from "../../hooks/admin/useDeleteCategory";
 import useSearchCategories from "../../hooks/useSearchCategories";
-import useUpdateCategory from "../../hooks/useUpdateCategory";
+import useUpdateCategory from "../../hooks/admin/useUpdateCategory";
 
 function Categories() {
     const [openDialog, setOpenDialog] = useState(false);

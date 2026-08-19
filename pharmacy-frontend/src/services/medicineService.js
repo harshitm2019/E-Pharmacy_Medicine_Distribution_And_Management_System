@@ -1,61 +1,17 @@
 import api from "../api/api";
 
-export async function getMedicines({
-
-    page,
-    size,
-    keyword,
-    categoryId,
-    status
-
-}) {
-
-    let url = "/admin/medicines";
-
-    if (keyword) {
-
-        url = "/admin/medicines/search";
-
-    }
-    else if (categoryId || status) {
-
-        url = "/admin/medicines/filter";
-
-    }
-
-    const response = await api.get(url, {
-
-        params: {
-
-            page,
-            size,
-            ...(keyword && { keyword }),
-            ...(categoryId && { categoryId }),
-            ...(status && { status })
-
-        }
-
+export async function getMedicinesByCategory({ categoryId, page, size }) {
+    const response = await api.get(`/medicines/category/${categoryId}`, {
+        params: { page, size }
     });
 
     return response.data;
 }
 
-export async function createMedicine(data) {
-
-    const response = await api.post("/admin/medicines", data);
-
-    return response.data;
-}
-
-export async function updateMedicineStatus(medicineIds, status) {
-    const response = await api.patch("/admin/medicines/status", {
-        medicineIds,
-        status
+export async function searchMedicines({ keyword, page, size }) {
+    const response = await api.get("/medicines/search", {
+        params: { keyword, page, size }
     });
-    return response.data;
-}
 
-export async function updateMedicine(medicineId, data) {
-    const response = await api.put(`/admin/medicines/${medicineId}`, data);
     return response.data;
 }

@@ -4,8 +4,6 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { Badge, Box, Button, Container, IconButton, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
-import SearchBar from "./SearchBar";
-
 function TopHeader() {
 
     return (
@@ -62,54 +60,12 @@ function TopHeader() {
                         boxShadow: "0 10px 30px rgba(0,0,0,.06)"
                     }}
                 >
-                    <SearchBar />
-
+                   
                 </Box>
                 {/* Actions */}
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-
-                    <IconButton
-                        color="primary"
-                        sx={{
-                            width: 46,
-                            height: 46,
-                            border: "1px solid #E0E0E0",
-                            bgcolor: "#fff",
-                            transition: ".3s",
-                            "&:hover": {
-                                bgcolor: "#F5F5F5",
-                                transform: "translateY(-2px)"
-                            }
-                        }}
-                    >
-
-                        <FavoriteBorderIcon />
-
-                    </IconButton>
-
-                    <IconButton
-                        color="primary"
-                        sx={{
-                            width: 46,
-                            height: 46,
-                            border: "1px solid #E0E0E0",
-                            bgcolor: "#fff",
-                            transition: ".3s",
-                            "&:hover": {
-                                bgcolor: "#F5F5F5",
-                                transform: "translateY(-2px)"
-                            }
-                        }}
-                    >
-
-                        <Badge badgeContent={0} color="error">
-
-                            <ShoppingCartOutlinedIcon />
-
-                        </Badge>
-
-                    </IconButton>
+ 
                     <Button
                         component={NavLink}
                         to="/login"

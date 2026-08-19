@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record CreateDeliveryBoyRequest(
 
-
         @NotNull(message = "User id is required.")
         Integer userId,
 
@@ -16,7 +15,6 @@ public record CreateDeliveryBoyRequest(
                 message = "Invalid vehicle number."
         )
         String vehicleNo
-
 
 ) {
 }

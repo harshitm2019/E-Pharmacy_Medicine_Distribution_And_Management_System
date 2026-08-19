@@ -31,11 +31,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
 
-
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final SecurityUtils securityUtils;
-
 
     @Override
     public PaymentResponse processOnlinePayment(PaymentRequest request) {
@@ -84,7 +82,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private boolean paymentGateway(PaymentRequest request) {
 
-        return Math.random() < 0.8;
+        return Math.random() < 0.5;
 
     }
 
@@ -134,8 +132,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = paymentRepository
                 .findByPaymentIdAndOrderUser(paymentId, user)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Payment not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found."));
 
         return PaymentMapper.toPaymentResponse(payment);
 
@@ -174,7 +171,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         }
 
-
         if (newPaymentMethod != PaymentMethod.COD)
             return false;
 
@@ -182,9 +178,18 @@ public class PaymentServiceImpl implements PaymentService {
         if (order.getPrescription() == null)
             return true;
 
-
-
         return order.getPrescription().getStatus() == PrescriptionStatus.APPROVED;
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PaymentResponse> getAllPayments() {
+
+        return paymentRepository
+                .findAll()
+                .stream()
+                .map(PaymentMapper::toPaymentResponse)
+                .toList();
     }
 }

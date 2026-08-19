@@ -3,6 +3,7 @@ package com.harshit.pharmacy.order.service.impl;
 import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.BusinessException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
+import com.harshit.pharmacy.order.dto.OrderReportResponse;
 import com.harshit.pharmacy.order.dto.OrderResponse;
 import com.harshit.pharmacy.order.entity.Order;
 import com.harshit.pharmacy.order.enums.OrderPaymentStatus;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -118,6 +121,31 @@ public class    AdminOrderServiceImpl implements AdminOrderService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
 
         orderService.processOrderCancellation(order);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderResponse getOrderById(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found."));
+
+        return orderMapper.toOrderResponse(order);
+    }
+
+    @Override
+    public Page<OrderReportResponse> getOrderReport(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+
+        if (startDate.isAfter(endDate)) {
+            throw new BadRequestException("Start date cannot be after end date.");
+        }
+
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.plusDays(1).atStartOfDay();
+
+        return orderRepository
+                .findByOrderDateGreaterThanEqualAndOrderDateLessThan(start, end, pageable)
+                .map(orderMapper::toOrderReportResponse);
 
     }
 

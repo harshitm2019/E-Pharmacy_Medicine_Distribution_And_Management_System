@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ChangePasswordRequest(
 
-
         @NotBlank(message = ErrorMessages.OLD_PASSWORD_IS_REQUIRED)
         String oldPassword,
 
@@ -14,7 +13,6 @@ public record ChangePasswordRequest(
 
         @NotBlank(message = ErrorMessages.CONFIRM_PASSWORD_IS_REQUIRED)
         String confirmPassword
-
 
 ) {
 }

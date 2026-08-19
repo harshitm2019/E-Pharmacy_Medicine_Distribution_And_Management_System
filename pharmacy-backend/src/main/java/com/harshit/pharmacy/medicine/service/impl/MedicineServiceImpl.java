@@ -71,14 +71,6 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     @Transactional(readOnly = true)
-    public MedicineResponse getMedicineById(Integer medicineId) {
-
-        return MedicineMapper.toResponse(getMedicine(medicineId));
-
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Page<MedicineResponse> getAllActiveMedicinesByCategory(Integer categoryId, Pageable pageable){
 
         return medicineRepository.findByStatusAndCategoryCategoryId(

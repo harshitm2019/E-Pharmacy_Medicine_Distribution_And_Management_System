@@ -3,13 +3,11 @@ package com.harshit.pharmacy.medicine.controller;
 
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
-import com.harshit.pharmacy.common.swagger.annotations.medicine.*;
 import com.harshit.pharmacy.medicine.dto.MedicineRequest;
 import com.harshit.pharmacy.medicine.dto.MedicineResponse;
 import com.harshit.pharmacy.medicine.dto.MedicineStatusRequest;
 import com.harshit.pharmacy.medicine.enums.MedicineStatus;
 import com.harshit.pharmacy.medicine.service.MedicineService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +20,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(
-        name = "Admin Medicine Management",
-        description = "APIs for managing medicines. Accessible only to administrators."
-)
-@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/medicines")
 public class AdminMedicineController {
 
-
     private final MedicineService medicineService;
 
-    @CreateMedicine
     @PostMapping
     public ResponseEntity<ApiResponse<MedicineResponse>> createMedicine(@Valid @RequestBody MedicineRequest request) {
 
@@ -48,8 +39,6 @@ public class AdminMedicineController {
         );
 
     }
-
-    @UpdateMedicine
     @PutMapping("/{medicineId}")
     public ResponseEntity<ApiResponse<MedicineResponse>> updateMedicine(@PathVariable Integer medicineId,
             @Valid @RequestBody MedicineRequest request) {
@@ -63,7 +52,6 @@ public class AdminMedicineController {
         );
     }
 
-    @SearchMedicine
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<MedicineResponse>>> searchMedicines(
             @RequestParam String keyword,
@@ -78,8 +66,6 @@ public class AdminMedicineController {
         );
 
     }
-
-    @GetAllMedicines
     @GetMapping
     public ResponseEntity<ApiResponse<Page<MedicineResponse>>> getAllMedicines(
             @ParameterObject Pageable pageable) {
@@ -94,22 +80,6 @@ public class AdminMedicineController {
 
     }
 
-    @GetMedicineById
-    @GetMapping("/{medicineId}")
-    public ResponseEntity<ApiResponse<MedicineResponse>> getMedicineById(
-            @PathVariable Integer medicineId) {
-
-        MedicineResponse medicineResponse = medicineService.getMedicineById(medicineId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-
-                ApiResponse.success(SuccessMessages.MEDICINE_FETCHED, medicineResponse)
-
-        );
-
-    }
-
-    @UpdateMedicineStatus
     @PatchMapping("/status")
     public ResponseEntity<ApiResponse<List<MedicineResponse>>> updateStatus(@Valid @RequestBody MedicineStatusRequest request) {
 

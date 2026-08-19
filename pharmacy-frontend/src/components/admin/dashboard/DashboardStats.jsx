@@ -4,12 +4,12 @@ import MedicationOutlinedIcon from "@mui/icons-material/MedicationOutlined";
 import PendingActionsOutlinedIcon from "@mui/icons-material/PendingActionsOutlined";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
-import StatCardSkeleton from "./StatCardSkeleton";
+import StatCardSkeleton from "../../common/dashboard/StatCardSkeleton";
 
 import { Grid } from "@mui/material";
 
-import useDashboard from "../../../hooks/useDashboard";
-import StatCard from "./StatCard";
+import useDashboard from "../../../hooks/admin/useDashboard";
+import StatCard from "../../common/dashboard/StatCard";
 
 function DashboardStats() {
 

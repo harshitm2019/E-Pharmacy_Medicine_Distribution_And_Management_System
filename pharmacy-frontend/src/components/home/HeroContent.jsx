@@ -1,9 +1,8 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 function HeroContent() {
 
@@ -85,53 +84,6 @@ function HeroContent() {
 
             </Typography>
 
-            {/* Buttons */}
-
-            <Stack
-                direction="row"
-                spacing={2}
-            >
-
-                <Button
-                    variant="contained"
-                    size="large"
-                    endIcon={<ArrowForwardIcon />}
-                    sx={{
-                        px: 4,
-                        py: 1.5,
-                        borderRadius: "40px",
-                        textTransform: "none",
-                        fontWeight: 700,
-                        boxShadow: "0 10px 25px rgba(46,125,50,.25)",
-
-                        "&:hover": {
-                            boxShadow: "0 15px 35px rgba(46,125,50,.35)"
-                        }
-                    }}
-                >
-
-                    Shop Medicines
-
-                </Button>
-
-                <Button
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                        px: 4,
-                        py: 1.5,
-                        borderRadius: "40px",
-                        textTransform: "none",
-                        fontWeight: 700
-                    }}
-                >
-
-                    Upload Prescription
-
-                </Button>
-
-            </Stack>
-
             {/* Statistics */}
 
             <Box mt={2}>
@@ -140,7 +92,6 @@ function HeroContent() {
                     direction="row"
                     spacing={8}
                 >
-
                     <Box>
 
                         <Typography

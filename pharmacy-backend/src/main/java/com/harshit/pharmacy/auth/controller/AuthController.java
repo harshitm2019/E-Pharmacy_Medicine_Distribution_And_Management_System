@@ -21,35 +21,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-
        private final AuthService authService;
 
        @PostMapping("/register")
        public ResponseEntity<ApiResponse<RegisterResponse>>
                   register(@Valid @RequestBody RegisterRequest registerRequest){
 
-
              RegisterResponse registerResponse = authService.register(registerRequest);
-
              return ResponseEntity.status(HttpStatus.CREATED).body(
 
                      ApiResponse.success(SuccessMessages.REGISTRATION_SUCCESSFUL, registerResponse)
              );
 
        }
-
       @PostMapping("/login")
       public ResponseEntity<ApiResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request) {
 
-        LoginResponse response =
-                authService.login(request);
+        LoginResponse response = authService.login(request);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-
                 ApiResponse.success(SuccessMessages.LOGIN_SUCCESSFUL, response)
-
         );
     }
-
 }

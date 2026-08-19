@@ -2,16 +2,17 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+import AssignDeliveryBoyDialog from "../../components/admin/delivery/AssignDeliveryBoyDialog";
 import CancelOrderDialog from "../../components/admin/order/CancelOrderDialog";
 import OrderDetailsDialog from "../../components/admin/order/OrderDetailsDialog";
 import OrderStatusDialog from "../../components/admin/order/OrderStatusDialog";
 import OrderTable from "../../components/admin/order/OrderTable";
 import PrescriptionDecisionDialog from "../../components/admin/order/PrescriptionDecisionDialog";
 import PrescriptionDetailsDialog from "../../components/admin/order/PrescriptionDetailsDialog";
-import useCancelOrder from "../../hooks/useCancelOrder";
-import useOrders from "../../hooks/useOrders";
-import useUpdateOrderStatus from "../../hooks/useUpdateOrderStatus";
-import useUpdatePrescriptionStatus from "../../hooks/useUpdatePrescriptionStatus";
+import useCancelOrder from "../../hooks/admin/useCancelOrder";
+import useOrders from "../../hooks/admin/useOrders";
+import useUpdateOrderStatus from "../../hooks/admin/useUpdateOrderStatus";
+import useUpdatePrescriptionStatus from "../../hooks/admin/useUpdatePrescriptionStatus";
 
 function Orders() {
     const [page, setPage] = useState(0);
@@ -23,6 +24,8 @@ function Orders() {
     const [prescriptionDecision, setPrescriptionDecision] = useState(null);
     const [orderStatusDecision, setOrderStatusDecision] = useState(null);
     const [selectedPrescription, setSelectedPrescription] = useState(null);
+    const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
 
     const { data, isLoading } = useOrders({ page, size, status });
     const updateOrderStatus = useUpdateOrderStatus();
@@ -144,6 +147,18 @@ function Orders() {
                 open={openDetails}
                 order={selectedOrder}
                 onClose={handleCloseDetails}
+                onAssign={orderId => {
+                    setSelectedOrderId(orderId);
+                    setAssignDialogOpen(true);
+                }}
+            />
+            <AssignDeliveryBoyDialog
+                open={assignDialogOpen}
+                orderId={selectedOrderId}
+                onClose={() => {
+                    setAssignDialogOpen(false);
+                    setSelectedOrderId(null);
+                }}
             />
 
             <PrescriptionDetailsDialog
@@ -180,5 +195,4 @@ function Orders() {
         </Box>
     );
 }
-
 export default Orders;

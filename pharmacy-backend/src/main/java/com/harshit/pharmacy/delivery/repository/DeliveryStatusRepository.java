@@ -34,6 +34,18 @@ public interface DeliveryStatusRepository extends JpaRepository<DeliveryStatus, 
             @Param("statuses") Collection<DeliveryStatusEnum> statuses
     );
 
+    Optional<DeliveryStatus> findByOrderOrderId(Integer orderId);
 
+    Page<DeliveryStatus> findByCurrentStatus(DeliveryStatusEnum status, Pageable pageable);
+
+    void deleteByOrder(Order order);
+
+    long countByDeliveryBoyUserUserIdAndCurrentStatus(Integer userId, DeliveryStatusEnum currentStatus);
+
+    Page<DeliveryStatus> findByDeliveryBoyUserUserIdAndCurrentStatus(
+            Integer userId,
+            DeliveryStatusEnum currentStatus,
+            Pageable pageable
+    );
 
 }

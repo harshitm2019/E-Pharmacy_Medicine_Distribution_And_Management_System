@@ -8,7 +8,8 @@ public record DeliveryBoyResponse(
          Integer deliveryBoyId,
          Integer userId,
          String vehicleNo,
-         String status
+         String status,
+         String username
 
 ) {
 }

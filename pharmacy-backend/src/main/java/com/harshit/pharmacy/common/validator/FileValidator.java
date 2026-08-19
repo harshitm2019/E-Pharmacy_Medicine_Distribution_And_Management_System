@@ -32,8 +32,4 @@ public class FileValidator {
             throw new BadRequestException(ErrorMessages.INVALID_PRESCRIPTION_FILE_TYPE);
         }
     }
-
-
-
-
 }

@@ -48,17 +48,6 @@ public class PaymentController {
                 ApiResponse.success(SuccessMessages.PAYMENT_PROCESSED_SUCCESSFULLY, response)
         );
     }
-
-    @PatchMapping("/cod/{orderId}")
-    public ResponseEntity<ApiResponse<Void>> collectCodPayment(@PathVariable Integer orderId) {
-
-        paymentService.collectCodPayment(orderId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.success(SuccessMessages.PAYMENT_COLLECTED_SUCCESSFULLY, null)
-        );
-    }
-
     @GetMapping
     public ResponseEntity<ApiResponse<List<PaymentResponse>>> getMyPayments() {
 
@@ -78,5 +67,4 @@ public class PaymentController {
                 ApiResponse.success(SuccessMessages.PAYMENT_FETCHED_SUCCESSFULLY, response)
         );
     }
-
 }

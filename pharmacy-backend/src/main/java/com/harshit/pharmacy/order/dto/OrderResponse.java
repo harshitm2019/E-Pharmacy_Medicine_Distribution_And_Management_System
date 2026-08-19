@@ -24,7 +24,9 @@ public record OrderResponse(
 
         List<OrderItemResponse> items,
 
-        PrescriptionResponse prescription
+        PrescriptionResponse prescription,
+
+        String paymentMethod
 
 
 ) {

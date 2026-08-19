@@ -11,6 +11,7 @@ import com.harshit.pharmacy.security.service.PasswordService;
 import com.harshit.pharmacy.security.utils.SecurityUtils;
 import com.harshit.pharmacy.user.entity.User;
 import com.harshit.pharmacy.user.entity.UserProfile;
+import com.harshit.pharmacy.user.enums.UserRole;
 import com.harshit.pharmacy.user.enums.UserStatus;
 import com.harshit.pharmacy.user.mapper.UserMapper;
 import com.harshit.pharmacy.user.dto.*;
@@ -43,32 +44,41 @@ public class UserServiceImpl implements UserService {
     public AdminUserResponse createUser(CreateUserRequest request) {
 
         userValidator.validateRegistration(request.email(),request.phoneNumber());
-
         User user = userMapper.toUser(request);
         userRepository.save(user);
-
         UserProfile profile = userMapper.toUserProfile(request, user);
         userProfileRepository.save(profile);
-
         return userMapper.toAdminUserResponse(user);
 
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<AdminUserResponse> getAllUsers(Pageable pageable) {
+    public Page<AdminUserResponse> getUsers(String role, String email, Pageable pageable) {
 
-        return userRepository.findAll(pageable).map(userMapper::toAdminUserResponse);
+        boolean hasRole = role != null && !role.isBlank();
+        boolean hasEmail = email != null && !email.isBlank();
 
+        Page<User> users;
+        if (hasRole && hasEmail) {
+
+            users = userRepository.findByRoleAndEmailContainingIgnoreCase(
+                    UserRole.valueOf(role.toUpperCase()), email, pageable);
+
+        } else if (hasRole)
+
+            users = userRepository.findByRole(UserRole.valueOf(role.toUpperCase()), pageable);
+
+         else if (hasEmail)
+
+            users = userRepository.findByEmailContainingIgnoreCase(email, pageable);
+
+          else
+
+            users = userRepository.findAll(pageable);
+
+        return users.map(userMapper::toAdminUserResponse);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Page<AdminUserResponse> searchUsers(String email, Pageable pageable) {
-
-        return userRepository.findByEmailContainingIgnoreCase(email, pageable).map(userMapper::toAdminUserResponse);
-
-    }
 
     @Override
     public AdminUserResponse updateUserStatus(Integer userId, UserStatusRequest request) {
@@ -88,9 +98,7 @@ public class UserServiceImpl implements UserService {
     public UserProfileResponse getMyProfile() {
 
         User user = securityUtils.getCurrentUser();
-
         UserProfile profile = getUserProfile(user);
-
         return userMapper.toUserProfileResponse(user,profile);
 
     }
@@ -99,14 +107,10 @@ public class UserServiceImpl implements UserService {
     public UserProfileResponse updateProfile(UserProfileRequest request) {
 
         User user = securityUtils.getCurrentUser();
-
         UserProfile profile = getUserProfile(user);
-
         userMapper.updateUserProfile(request, user, profile);
-
         userRepository.save(user);
         userProfileRepository.save(profile);
-
         return userMapper.toUserProfileResponse(user, profile);
     }
 

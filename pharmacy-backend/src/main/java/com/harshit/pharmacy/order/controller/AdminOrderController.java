@@ -3,6 +3,7 @@ package com.harshit.pharmacy.order.controller;
 
 import com.harshit.pharmacy.common.constants.SuccessMessages;
 import com.harshit.pharmacy.common.response.ApiResponse;
+import com.harshit.pharmacy.order.dto.OrderReportResponse;
 import com.harshit.pharmacy.order.dto.OrderResponse;
 import com.harshit.pharmacy.order.dto.OrderStatusUpdateRequest;
 import com.harshit.pharmacy.order.service.AdminOrderService;
@@ -13,10 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,5 +76,25 @@ public class AdminOrderController {
                 ApiResponse.success(SuccessMessages.ORDER_CANCELLED_SUCCESSFULLY, null)
         );
     }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<ApiResponse<OrderResponse>> getOrderById(@PathVariable Integer orderId) {
+        OrderResponse response = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(ApiResponse.success(SuccessMessages.ORDERS_FETCHED_SUCCESSFULLY, response));
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<ApiResponse<Page<OrderReportResponse>>> getOrderReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @ParameterObject
+            @PageableDefault(sort = "orderDate", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<OrderReportResponse> response = orderService.getOrderReport(startDate, endDate, pageable);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Order Report Fetched Successfully", response)
+        );
+    }
+
 
 }

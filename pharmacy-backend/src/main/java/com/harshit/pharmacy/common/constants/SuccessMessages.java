@@ -32,7 +32,6 @@ public final class SuccessMessages {
     public static final String PAYMENT_COLLECTED_SUCCESSFULLY = "Cash on Delivery payment collected successfully.";
     public static final String PAYMENT_FETCHED_SUCCESSFULLY = "Payment fetched successfully.";
     public static final String PAYMENTS_FETCHED_SUCCESSFULLY = "Payments fetched successfully.";
-    public static final String PENDING_ORDERS_FETCHED_SUCCESSFULLY = "Pending orders fetched successfully.";
     public static final String ORDER_FETCHED_SUCCESSFULLY = "Order fetched successfully.";
     public static final String ORDER_STATUS_UPDATED_SUCCESSFULLY = "Order status updated successfully.";
     public static final String PRESCRIPTION_STATUS_UPDATED_SUCCESSFULLY = "Prescription status updated successfully.";
@@ -42,7 +41,6 @@ public final class SuccessMessages {
     public static final String ORDER_UPDATED_SUCCESSFULLY = "Order updated successfully.";
     public static final String DELIVERY_BOY_CREATED = "Delivery boy created successfully";
     public static final String DELIVERY_BOY_UPDATED = "Delivery boy updated successfully";
-    public static final String DELIVERY_BOY_FETCHED = "Delivery boy fetched successfully";
     public static final String DELIVERY_BOYS_FETCHED = "Delivery boys fetched successfully";
     public static final String AVAILABLE_DELIVERY_BOYS_FETCHED = "Available delivery boys fetched successfully";
     public static final String DELIVERY_BOY_ASSIGNED = "Delivery boy assigned successfully";

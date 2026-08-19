@@ -7,10 +7,10 @@ import MedicineDialog from "../../components/admin/medicine/MedicineDialog";
 import MedicineForm from "../../components/admin/medicine/MedicineForm";
 import MedicineTable from "../../components/admin/medicine/MedicineTable";
 import MedicineToolbar from "../../components/admin/medicine/MedicineToolbar";
-import useCreateMedicine from "../../hooks/useCreateMedicine";
-import useMedicines from "../../hooks/useMedicines";
-import useUpdateMedicine from "../../hooks/useUpdateMedicine";
-import useUpdateMedicineStatus from "../../hooks/useUpdateMedicineStatus";
+import useCreateMedicine from "../../hooks//admin/useCreateMedicine";
+import useMedicines from "../../hooks/admin/useMedicines";
+import useUpdateMedicine from "../../hooks/admin/useUpdateMedicine";
+import useUpdateMedicineStatus from "../../hooks/admin/useUpdateMedicineStatus";
 
 
 function Medicines() {
@@ -25,7 +25,6 @@ function Medicines() {
     const [openDetails, setOpenDetails] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
     const [editMedicine, setEditMedicine] = useState(null);
-
     const { data, isLoading } = useMedicines({ page, size, keyword, categoryId, status });
     const updateStatus = useUpdateMedicineStatus();
     const createMedicine = useCreateMedicine();

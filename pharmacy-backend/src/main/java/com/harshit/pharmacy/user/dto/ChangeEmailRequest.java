@@ -6,14 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ChangeEmailRequest(
 
-
         @NotBlank(message = ErrorMessages.EMAIL_IS_REQUIRED)
         @Email(message = ErrorMessages.INVALID_EMAIL)
         String newEmail,
 
         @NotBlank(message = ErrorMessages.PASSWORD_IS_REQUIRED)
         String password
-
 
 ) {
 }

@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PasswordServiceImpl implements PasswordService {
 
-
      private  final PasswordEncoder passwordEncoder;
-
 
     @Override
     public String encode(String password) {
@@ -20,7 +18,6 @@ public class PasswordServiceImpl implements PasswordService {
          return passwordEncoder.encode(password);
 
     }
-
     @Override
     public boolean matches(String rawPassword, String encodedPassword) {
 

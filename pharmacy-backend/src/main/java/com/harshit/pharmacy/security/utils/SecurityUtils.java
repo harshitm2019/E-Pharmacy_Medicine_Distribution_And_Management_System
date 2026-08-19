@@ -18,11 +18,9 @@ public class SecurityUtils {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new UnauthorizedException(ErrorMessages.AUTHENTICATION_REQUIRED);
         }
-
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         return userDetails.getUser();
     }
-
 
 }

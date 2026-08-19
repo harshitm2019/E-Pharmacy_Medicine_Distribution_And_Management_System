@@ -1,5 +1,6 @@
 package com.harshit.pharmacy.delivery.service.impl;
 
+import com.harshit.pharmacy.common.constants.ErrorMessages;
 import com.harshit.pharmacy.delivery.dto.*;
 import com.harshit.pharmacy.delivery.entity.DeliveryBoy;
 import com.harshit.pharmacy.delivery.entity.DeliveryStatus;
@@ -12,9 +13,12 @@ import com.harshit.pharmacy.delivery.service.DeliveryService;
 import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.DuplicateResourceException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
+import com.harshit.pharmacy.exception.UnauthorizedException;
+import com.harshit.pharmacy.order.dto.OrderResponse;
 import com.harshit.pharmacy.order.entity.Order;
 import com.harshit.pharmacy.order.enums.OrderPaymentStatus;
 import com.harshit.pharmacy.order.enums.OrderStatus;
+import com.harshit.pharmacy.order.mapper.OrderMapper;
 import com.harshit.pharmacy.order.repository.OrderRepository;
 import com.harshit.pharmacy.payment.service.PaymentService;
 import com.harshit.pharmacy.security.utils.SecurityUtils;
@@ -44,8 +48,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final PaymentService paymentService;
     private final SecurityUtils securityUtils;
     private final DeliveryMapper deliveryMapper;
+    private final OrderMapper orderMapper;
     private static final int MAX_ACTIVE_ORDERS = 3;
-
 
     @Override
     public DeliveryBoyResponse createDeliveryBoy(CreateDeliveryBoyRequest request) {
@@ -80,14 +84,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public DeliveryBoyResponse getDeliveryBoyById(Integer deliveryBoyId) {
-
-        DeliveryBoy deliveryBoy = getDeliveryBoy(deliveryBoyId);
-        return deliveryMapper.toDeliveryBoyResponse(deliveryBoy);
-
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -106,7 +102,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         if (deliveryStatusRepository.existsByOrder(order))
             throw new DuplicateResourceException("Order is already assigned to a delivery boy.");
-
 
         if(deliveryStatusRepository.countActiveOrders(
                 deliveryBoy.getDeliveryBoyId(),DeliveryStatusEnum.ACTIVE_STATUSES) >= MAX_ACTIVE_ORDERS)
@@ -160,11 +155,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 
             paymentService.collectCodPayment(orderId);
 
-
         return deliveryMapper.toDeliveryStatusResponse(deliveryStatus);
 
     }
-
     @Override
     @Transactional(readOnly = true)
     public DeliveryStatusResponse trackDelivery(Integer orderId){
@@ -193,6 +186,66 @@ public class DeliveryServiceImpl implements DeliveryService {
         return deliveryBoyRepository.findAvailableDeliveryBoys(
                         DeliveryBoyStatus.ACTIVE,DeliveryStatusEnum.ACTIVE_STATUSES,
                         MAX_ACTIVE_ORDERS,pageable).map(deliveryMapper::toDeliveryBoyResponse);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DeliveryStatusResponse getDeliveryStatus(Integer orderId) {
+        return deliveryStatusRepository.findByOrderOrderId(orderId)
+                .map(deliveryMapper::toDeliveryStatusResponse)
+                .orElse(DeliveryStatusResponse.builder().orderId(orderId).build());
+    }
+
+    @Override
+    public Page<DeliveryStatusResponse> getDeliveryStatusByStatus(String status, Pageable pageable) {
+
+        DeliveryStatusEnum deliveryStatus = DeliveryStatusEnum.valueOf(status.toUpperCase());
+        return deliveryStatusRepository.findByCurrentStatus(deliveryStatus, pageable)
+                .map(deliveryMapper::toDeliveryStatusResponse);
+    }
+
+    @Override
+    public void removeDeliveryAssignment(Order order) {
+
+        deliveryStatusRepository.deleteByOrder(order);
+
+    }
+
+    @Override
+    public Page<DeliveryStatusResponse> getMyDeliveryOrdersByStatus(String status, Pageable pageable) {
+
+        User currentUser = securityUtils.getCurrentUser();
+
+        DeliveryStatusEnum deliveryStatus;
+
+        deliveryStatus = DeliveryStatusEnum.valueOf(status.toUpperCase());
+
+        return deliveryStatusRepository
+                .findByDeliveryBoyUserUserIdAndCurrentStatus(currentUser.getUserId(),
+                        deliveryStatus,
+                        pageable
+                ).map(deliveryMapper::toDeliveryStatusResponse);
+    }
+
+    @Override
+    public OrderResponse getOrderDetails(Integer orderId) {
+
+        User currentUser = securityUtils.getCurrentUser();
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                        new ResourceNotFoundException("Order not found."));
+
+        DeliveryStatus deliveryStatus = deliveryStatusRepository.findByOrder(order).orElseThrow(() ->
+                                         new ResourceNotFoundException("Delivery details not found."));
+
+        Integer assignedUserId = deliveryStatus.getDeliveryBoy().getUser().getUserId();
+
+        if (!assignedUserId.equals(currentUser.getUserId()))
+            throw new UnauthorizedException("You are not assign to this order.");
+
+
+        return orderMapper.toOrderResponse(order);
 
     }
 
@@ -281,9 +334,6 @@ public class DeliveryServiceImpl implements DeliveryService {
             default -> throw new BadRequestException("Invalid delivery status transition from: " + current);
 
         }
-
-
-
     }
 }
 

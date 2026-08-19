@@ -27,14 +27,11 @@ public class CustomUserDetailsService implements UserDetailsService {
            return new CustomUserDetails(user);
 
     }
-
     public UserDetails loadUserByUserId(Integer userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
+                .orElseThrow(() -> new UsernameNotFoundException(
                                 ErrorMessages.INVALID_CREDENTIALS));
-
         return new CustomUserDetails(user);
     }
 }

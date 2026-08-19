@@ -1,6 +1,7 @@
 package com.harshit.pharmacy.order.service.impl;
 
 import com.harshit.pharmacy.common.validator.CheckoutValidator;
+import com.harshit.pharmacy.delivery.service.DeliveryService;
 import com.harshit.pharmacy.exception.BadRequestException;
 import com.harshit.pharmacy.exception.ResourceNotFoundException;
 import com.harshit.pharmacy.medicine.entity.Medicine;
@@ -47,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentService paymentService;
     private final PrescriptionService prescriptionService;
     private final OrderMapper orderMapper;
-
+    private final DeliveryService deliveryService;
 
 
     @Override
@@ -154,6 +155,8 @@ public class OrderServiceImpl implements OrderService {
 
             restoreStock(order);
         }
+
+        deliveryService.removeDeliveryAssignment(order);
 
         order.setOrderStatus(OrderStatus.CANCELLED);
 

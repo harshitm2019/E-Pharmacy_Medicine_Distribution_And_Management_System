@@ -24,4 +24,6 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Inte
 
     long countByStatus(PrescriptionStatus status);
 
+    long countByUser(User user);
+
 }

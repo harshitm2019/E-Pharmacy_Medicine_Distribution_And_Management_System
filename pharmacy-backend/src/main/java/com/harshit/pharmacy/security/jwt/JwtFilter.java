@@ -42,8 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader =
-                request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
+        String authorizationHeader = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
 
         if (authorizationHeader == null
                 || !authorizationHeader.startsWith(SecurityConstants.BEARER_PREFIX)) {
@@ -51,7 +50,6 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         try {
 
             String token = authorizationHeader.substring(
@@ -73,18 +71,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
+                                    userDetails, null,
                                     userDetails.getAuthorities()
                             );
 
                     authentication.setDetails(
-                            new WebAuthenticationDetailsSource()
-                                    .buildDetails(request)
-                    );
+                            new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
 
@@ -95,7 +89,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
 
         }
-
         catch (MalformedJwtException ex) {
 
             handleJwtException(response,ErrorMessages.INVALID_JWT_TOKEN);
@@ -108,7 +101,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
 
         }
-
         catch (UnsupportedJwtException ex) {
 
             handleJwtException(response,ErrorMessages.UNSUPPORTED_JWT_TOKEN);
@@ -121,18 +113,14 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
 
         }
-
         catch (JwtException ex) {
 
             handleJwtException(response,ErrorMessages.INVALID_JWT_TOKEN);
             return;
 
         }
-
         filterChain.doFilter(request, response);
-
     }
-
     private void handleJwtException(HttpServletResponse response,String message) throws IOException {
         SecurityContextHolder.clearContext();
 
@@ -144,7 +132,4 @@ public class JwtFilter extends OncePerRequestFilter {
                 ApiResponse.failure(message, null)
         );
     }
-
-
-
 }

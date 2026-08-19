@@ -46,19 +46,24 @@ public class DeliveryMapper {
                 .userId(deliveryBoy.getUser().getUserId())
                 .vehicleNo(deliveryBoy.getVehicleNo())
                 .status(deliveryBoy.getStatus().name())
+                .username(deliveryBoy.getUser().getUsername())
                 .build();
 
     }
 
     public DeliveryStatusResponse toDeliveryStatusResponse(DeliveryStatus deliveryStatus) {
+        DeliveryBoy deliveryBoy = deliveryStatus.getDeliveryBoy();
+        User user = deliveryBoy.getUser();
 
         return DeliveryStatusResponse.builder()
                 .orderId(deliveryStatus.getOrder().getOrderId())
-                .deliveryStatus(String.valueOf(deliveryStatus.getCurrentStatus()))
+                .deliveryStatus(deliveryStatus.getCurrentStatus().name())
+                .deliveryBoyId(deliveryBoy.getDeliveryBoyId())
+                .deliveryBoyName(user.getUsername())
+                .vehicleNo(deliveryBoy.getVehicleNo())
                 .assignedDate(deliveryStatus.getAssignedDate())
                 .expectedDeliveryDate(deliveryStatus.getExpectedDeliveryDate())
                 .build();
-
     }
 
 }

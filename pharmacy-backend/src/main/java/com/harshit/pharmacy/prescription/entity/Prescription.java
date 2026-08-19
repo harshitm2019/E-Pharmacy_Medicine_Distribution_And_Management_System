@@ -1,16 +1,12 @@
 package com.harshit.pharmacy.prescription.entity;
 
-import com.harshit.pharmacy.common.constants.FieldNames;
 import com.harshit.pharmacy.prescription.enums.PrescriptionStatus;
 import com.harshit.pharmacy.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.processing.SQL;
 import org.hibernate.type.SqlTypes;
-import org.springframework.core.annotation.Order;
 
 import java.time.LocalDateTime;
 
@@ -36,8 +32,7 @@ public class Prescription {
     @Column(name = "file_path", nullable = false, length = 200)
     private String filePath;
 
-    @Column(name = "doctor_name", nullable = false, length = 200
-    )
+    @Column(name = "doctor_name", nullable = false, length = 200)
     private String doctorName;
 
     @CreationTimestamp

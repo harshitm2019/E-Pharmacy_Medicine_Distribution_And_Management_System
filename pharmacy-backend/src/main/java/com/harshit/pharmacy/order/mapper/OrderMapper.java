@@ -1,9 +1,6 @@
 package com.harshit.pharmacy.order.mapper;
 
-import com.harshit.pharmacy.order.dto.CalculationResult;
-import com.harshit.pharmacy.order.dto.CheckoutResponse;
-import com.harshit.pharmacy.order.dto.OrderItemResponse;
-import com.harshit.pharmacy.order.dto.OrderResponse;
+import com.harshit.pharmacy.order.dto.*;
 import com.harshit.pharmacy.order.entity.Order;
 import com.harshit.pharmacy.order.entity.OrderItem;
 import com.harshit.pharmacy.order.enums.OrderPaymentStatus;
@@ -91,9 +88,7 @@ public class OrderMapper {
                                 .collect(Collectors.toCollection(ArrayList::new)))
                  .prescription(order.getPrescription() != null
                 ? prescriptionMapper.toResponse(order.getPrescription())
-                : null)
-
-                .build();
+                : null).build();
 
     }
 
@@ -108,6 +103,16 @@ public class OrderMapper {
                 .tax(item.getTax())
                 .build();
 
+    }
+
+    public OrderReportResponse toOrderReportResponse(Order order) {
+        return OrderReportResponse.builder()
+                .orderId(order.getOrderId())
+                .customerName(order.getUser().getUsername())
+                .orderDate(order.getOrderDate())
+                .totalAmount(order.getTotalAmount())
+                .status(order.getOrderStatus().name())
+                .build();
     }
 
 
